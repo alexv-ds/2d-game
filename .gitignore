@@ -43,5 +43,3 @@ build/
 
 #cpm
 cpm-cache/
-
-conan_provider.cmake
