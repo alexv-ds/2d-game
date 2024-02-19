@@ -50,3 +50,4 @@ CPMDeclarePackage(spdlog
     "SPDLOG_ENABLE_PCH ON"
     "SPDLOG_USE_STD_FORMAT ON"
 )
+

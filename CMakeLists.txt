@@ -14,6 +14,8 @@ add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 include(cmake/get_cpm.cmake)
 CPMUsePackageLock(package-lock.cmake)
 
+find_package(EASTL)
+
 add_subdirectory(modules/window)
 
 add_executable(main main.cpp)
