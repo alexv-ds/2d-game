@@ -1,30 +1,16 @@
-#include <SFML/Graphics.hpp>
 #include <engine/window.hpp>
 
-static void compile_check(flecs::world& world) {
-  world.import<engine::Window>();
+namespace engine::window {
+  void init_window_components(flecs::world&);
+  void init_window_phases(flecs::world&);
+  void init_window_systems(flecs::world&);
 }
 
-namespace engine {
+engine::Window::Window(flecs::world& world) {
+  world.module<Window>("window");
 
-  struct Window::Impl {
-    eastl::shared_ptr<sf::RenderWindow> window;
-    eastl::fixed_vector<window::Event, 10, false> events;
-  };
-
-  Window::Window(flecs::world& world) {
-    world.module<Window>();
-  }
-
-  Window::~Window() = default;
-
-
-  eastl::shared_ptr<sf::RenderTarget> Window::render_target() {
-    return nullptr;
-  }
-
-  const eastl::fixed_vector<window::Event, 10, false>& Window::events() const noexcept {
-    return impl->events;
-  }
+  window::init_window_components(world);
+  window::init_window_phases(world);
+  window::init_window_systems(world);
 }
 
