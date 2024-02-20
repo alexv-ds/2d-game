@@ -9,7 +9,13 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
+
+add_compile_definitions(
+  SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE
+  EASTL_DEBUGPARAMS_LEVEL=2
+  EASTL_NAME_ENABLED
+)
+
 
 include(cmake/get_cpm.cmake)
 CPMUsePackageLock(package-lock.cmake)
@@ -20,4 +26,4 @@ add_subdirectory(modules/window)
 add_subdirectory(modules/space)
 
 add_executable(main main.cpp)
-target_link_libraries(main engine::window engine::space)
+target_link_libraries(main engine::window engine::space spdlog::spdlog)

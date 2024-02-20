@@ -36,8 +36,10 @@ namespace engine {
       };
     };
 
+    struct Global {};
+
     struct Static {};
-    struct Update {};
+    struct Recalculate {};
   }
 
 }

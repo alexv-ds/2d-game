@@ -7,6 +7,12 @@ namespace engine::window {
 
   static bool check_window(const flecs::world& world, SFML_RenderWindow* window) {
     bool exit = false;
+
+    // suppress if we already in exit progress
+    if (world.should_quit()) {
+      return exit;
+    }
+
     if (!window->window) {
       SPDLOG_CRITICAL("SFML_RenderWindow::window is nullptr. Shutdown");
       exit = true;
