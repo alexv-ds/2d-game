@@ -21,6 +21,7 @@ include(cmake/get_cpm.cmake)
 CPMUsePackageLock(package-lock.cmake)
 
 find_package(EASTL)
+find_package(glm)
 
 add_subdirectory(modules/window)
 add_subdirectory(modules/space)

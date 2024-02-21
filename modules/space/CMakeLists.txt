@@ -3,6 +3,7 @@ add_library(engine-space
   include/engine/space.hpp
   src/space.cpp
   src/space-components.cpp
+  src/space-systems.cpp
 )
 add_library(engine::space ALIAS engine-space)
 target_include_directories(engine-space PUBLIC include)

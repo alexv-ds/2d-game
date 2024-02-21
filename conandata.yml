@@ -2,4 +2,5 @@
 # To keep your changes, remove these comment lines, but the plugin won't be able to modify your requirements
 
 requirements:
+  - "glm/cci.20230113"
   - "eastl/3.21.12"

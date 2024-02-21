@@ -3,6 +3,8 @@
 #include <engine/window/components-sfml.hpp>
 #include <engine/space.hpp>
 
+#include <random>
+
 void* __cdecl operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
 }
@@ -13,23 +15,56 @@ int main() {
 #endif
   flecs::world world;
 
-  world.import<engine::Window>();
+  //world.import<engine::Window>();
   world.import<engine::Space>();
 
-  world.set<engine::window::SFML_RenderWindow>({
-    .window = eastl::make_shared<sf::RenderWindow>(
-      sf::VideoMode({1100,800}),
-      "Window"
-    )
-  });
+//  world.set<engine::window::SFML_RenderWindow>({
+//    .window = eastl::make_shared<sf::RenderWindow>(
+//      sf::VideoMode({1100,800}),
+//      "Window"
+//    )
+//  });
 
-  world.entity("test transform")
-    .add<engine::space::Size>()
-    .add<engine::space::Position>()
-    .add<engine::space::Transform>()
-    .add<engine::space::Size, engine::space::Global>()
-    .add<engine::space::Position, engine::space::Global>()
-    .add<engine::space::Transform, engine::space::Global>();
+
+//  {
+//    auto _ = world.scope("test_entities");
+//    std::random_device rd;
+//    std::default_random_engine re(rd());
+//    std::uniform_real_distribution<float> dist(0.0f, 10000.0f);
+//
+//    for (std::size_t i = 0; i < 100; ++i) {
+//      world.entity()
+//        .set<engine::space::Position>({
+//          .x = dist(re),
+//          .y = dist(re)
+//        })
+//        .add<engine::space::Position, engine::space::Global>()
+//        .add<engine::space::Static>();
+//    }
+//
+//      SPDLOG_INFO("Test entities initialised");
+//    }
+
+    {
+      auto e1 = world.entity()
+        .add<engine::space::Position>()
+        .add<engine::space::Position, engine::space::Global>();
+
+      auto sttc = world.entity()
+        .add<engine::space::Position>()
+        .add<engine::space::Position, engine::space::Global>()
+        .add<engine::space::Static>()
+        .add<engine::space::Recalculate>()
+        .child_of(e1);
+
+      auto e2 = world.entity()
+        .add<engine::space::Position>()
+        .add<engine::space::Position, engine::space::Global>()
+        .child_of(sttc);
+    }
+
+
+
 
   return world.app()
     .enable_monitor(true)

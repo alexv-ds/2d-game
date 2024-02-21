@@ -27,15 +27,6 @@ namespace engine {
       float y = 1;
     };
 
-    struct Transform {
-      // GLM compatible matrix
-      float matrix[9] = {
-        1,0,0,
-        0,1,0,
-        0,0,1
-      };
-    };
-
     struct Global {};
 
     struct Static {};

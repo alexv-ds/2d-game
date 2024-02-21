@@ -23,13 +23,5 @@ namespace engine::space {
     world.component<Recalculate>();
 
     world.component<Global>();
-
-    {
-      static_assert(std::is_array_v<decltype(Transform::matrix)>);
-      using element_type = std::remove_all_extents_t<decltype(Transform::matrix)>;
-      world.component<Transform>()
-        .array<element_type>(sizeof(Transform::matrix) / sizeof(element_type));
-    }
-
   }
 }
