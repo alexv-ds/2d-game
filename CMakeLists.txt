@@ -23,8 +23,9 @@ CPMUsePackageLock(package-lock.cmake)
 find_package(EASTL)
 find_package(glm)
 
-add_subdirectory(modules/window)
 add_subdirectory(modules/space)
+add_subdirectory(modules/window)
+
 
 add_executable(main main.cpp)
 target_link_libraries(main engine::window engine::space spdlog::spdlog)

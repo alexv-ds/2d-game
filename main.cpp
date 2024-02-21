@@ -15,15 +15,15 @@ int main() {
 #endif
   flecs::world world;
 
-  //world.import<engine::Window>();
+  world.import<engine::Window>();
   world.import<engine::Space>();
 
-//  world.set<engine::window::SFML_RenderWindow>({
-//    .window = eastl::make_shared<sf::RenderWindow>(
-//      sf::VideoMode({1100,800}),
-//      "Window"
-//    )
-//  });
+  world.set<engine::window::SFML_RenderWindow>({
+    .window = eastl::make_shared<sf::RenderWindow>(
+      sf::VideoMode({1100,800}),
+      "Window"
+    )
+  });
 
 
 //  {

@@ -7,6 +7,8 @@ add_library(engine-window
   include/engine/window/components.hpp
   include/engine/window/components-sfml.hpp
   src/window-components.cpp
+  include/engine/graphics.hpp
+  src/graphics.cpp
 )
 add_library(engine::window ALIAS engine-window)
 target_include_directories(engine-window PUBLIC include)
@@ -20,4 +22,4 @@ target_link_libraries(engine-window PUBLIC
   flecs::flecs_static
   EASTL::EASTL
 )
-target_link_libraries(engine-window PRIVATE spdlog::spdlog)
+target_link_libraries(engine-window PRIVATE spdlog::spdlog engine::space)
