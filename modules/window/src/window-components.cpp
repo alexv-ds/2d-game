@@ -30,7 +30,7 @@ namespace engine::window {
 
     world.entity<phases::SFML_WindowDisplayPre>()
       .add(flecs::Phase)
-      .depends_on(flecs::OnStore);
+      .depends_on(flecs::PostFrame);
 
     world.entity<phases::SFML_WindowDisplay>()
       .add(flecs::Phase)

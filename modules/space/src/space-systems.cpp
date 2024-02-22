@@ -16,7 +16,17 @@ namespace engine::space {
     }
   }
 
-  static void UpdateRotation(flecs::iter& it, const Rotation* local, Rotation* global, const Rotation* parent) {}
+  static void UpdateRotation(flecs::iter& it, const Rotation* local, Rotation* global, const Rotation* parent) {
+    if (parent) {
+      for (auto i: it) {
+        global[i].rad = local[i].rad + parent[i].rad;
+      }
+    } else {
+      for (auto i: it) {
+        global[i].rad = local[i].rad;
+      }
+    }
+  }
 
   static void UpdateScale(flecs::iter& it, const Scale* local, Scale* global, const Scale* parent) {}
 

@@ -8,9 +8,11 @@ namespace engine {
     explicit Graphics(flecs::world&);
   };
 
-  struct Color {
-    float r = 1;
-    float g = 1;
-    float b = 1;
-  };
+  namespace graphics {
+    struct Color {
+      float r = 1;
+      float g = 1;
+      float b = 1;
+    };
+  }
 }
