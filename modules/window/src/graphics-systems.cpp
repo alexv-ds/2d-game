@@ -63,9 +63,15 @@ namespace engine::graphics {
     if (it.is_self(2)) {
       for (auto i: it) {
         const sf::Color sf_color(
-          eastl::clamp(static_cast<std::uint8_t>(color[i].r * 255), std::uint8_t{0}, std::uint8_t{255}),
-          eastl::clamp(static_cast<std::uint8_t>(color[i].g * 255), std::uint8_t{0}, std::uint8_t{255}),
-          eastl::clamp(static_cast<std::uint8_t>(color[i].b * 255), std::uint8_t{0}, std::uint8_t{255})
+          static_cast<std::uint8_t>(
+            eastl::clamp(static_cast<std::uint32_t>(color[i].r * 255), std::uint32_t{0}, std::uint32_t{255})
+          ),
+          static_cast<std::uint8_t>(
+            eastl::clamp(static_cast<std::uint32_t>(color[i].g * 255), std::uint32_t{0}, std::uint32_t{255})
+          ),
+          static_cast<std::uint8_t>(
+            eastl::clamp(static_cast<std::uint32_t>(color[i].b * 255), std::uint32_t{0}, std::uint32_t{255})
+          )
         );
 
         quad[i].vertexes[0].color = sf_color;
@@ -77,9 +83,15 @@ namespace engine::graphics {
       }
     } else {
       const sf::Color sf_color(
-        eastl::clamp(static_cast<std::uint8_t>(color->r * 255), std::uint8_t{0}, std::uint8_t{255}),
-        eastl::clamp(static_cast<std::uint8_t>(color->g * 255), std::uint8_t{0}, std::uint8_t{255}),
-        eastl::clamp(static_cast<std::uint8_t>(color->b * 255), std::uint8_t{0}, std::uint8_t{255})
+        static_cast<std::uint8_t>(
+          eastl::clamp(static_cast<std::uint32_t>(color->r * 255), std::uint32_t{0}, std::uint32_t{255})
+        ),
+        static_cast<std::uint8_t>(
+          eastl::clamp(static_cast<std::uint32_t>(color->g * 255), std::uint32_t{0}, std::uint32_t{255})
+        ),
+        static_cast<std::uint8_t>(
+          eastl::clamp(static_cast<std::uint32_t>(color->b * 255), std::uint32_t{0}, std::uint32_t{255})
+        )
       );
 
       for (auto i: it) {

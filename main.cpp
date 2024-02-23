@@ -4,7 +4,7 @@
 #include <engine/space.hpp>
 #include <engine/graphics.hpp>
 
-
+#include <cmath>
 #include <random>
 
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
@@ -35,59 +35,94 @@ int main() {
   world.import<engine::Space>();
   world.import<engine::Graphics>();
 
-
+  for (const sf::VideoMode& mode : sf::VideoMode::getFullscreenModes()) {
+    SPDLOG_WARN("{} {} {}", mode.size.x, mode.size.y, mode.bitsPerPixel);
+  }
   eastl::shared_ptr window = eastl::make_shared<sf::RenderWindow>(
-    sf::VideoMode({1100, 800}),
-    "Window"
+    sf::VideoMode::getDesktopMode(),
+    "Window",
+    sf::Style::Default,
+    sf::State::Fullscreen
   );
-  world.set<engine::window::SFML_RenderWindow>({
-                                                 .window = window
-                                               });
+  world.set<engine::window::SFML_RenderWindow>(
+    {
+      .window = window
+    }
+  );
 
 
   {
     auto _ = world.scope("entities");
-    std::random_device rd;
-    std::shared_ptr re = std::make_shared<std::default_random_engine>(rd());
-    std::shared_ptr dist = std::make_shared<std::uniform_real_distribution<float>>(0.1f, 1.0f);
-    std::uniform_real_distribution<float> rotation_dist(0.0f, 2.0f * 3.1415f);
-    std::uniform_int_distribution<std::size_t> material_dist(0, 2);
-    std::shared_ptr layer_dist = std::make_shared<std::uniform_real_distribution<float>>(-1000000, 1000000);
 
+    struct Orbit {
+      float angular_speed = 2;
+      float angle = 0;
+      float radius = 1;
+    };
 
-    world.entity("green")
-      .is_a<engine::graphics::material::BlendAdd>()
-      .set<engine::space::Position>({.x = 0, .y = 0})
-      .add<engine::space::Position, engine::space::Global>()
+    world.component<Orbit>()
+      .member<float>("angular_speed")
+      .member<float>("angle")
+      .member<float>("radius");
+
+    using namespace engine::space;
+
+    auto prefab = world.prefab("prefab")
+      .is_a<engine::graphics::material::BlendAlpha>()
       .add<engine::space::Size>()
-      .set<engine::graphics::Layer>({-1})
+      .add<engine::space::Position>()
+      .add<engine::space::Rotation>()
       .add<engine::space::Scale>()
-      .add<engine::space::Scale, engine::space::Global>()
-      .set<engine::graphics::Color>({0, 1, 0});
-
-    world.entity("pink")
-      .is_a<engine::graphics::material::BlendAdd>()
-      .set<engine::space::Position>({.x = 0.5, .y = 0})
+      .override<engine::space::Position>()
+      .override<engine::space::Rotation>()
+      .override<engine::space::Scale>()
       .add<engine::space::Position, engine::space::Global>()
-      .add<engine::space::Size>()
-      .set<engine::graphics::Layer>({1})
-      .set<engine::graphics::Color>({1, 0, 1});//.set<engine::graphics::Alpha>({0.5});
+      .add<engine::space::Rotation, engine::space::Global>()
+      .add<engine::space::Scale, engine::space::Global>()
+      .override<engine::space::Position, engine::space::Global>()
+      .override<engine::space::Rotation, engine::space::Global>()
+      .override<engine::space::Scale, engine::space::Global>();
 
+    std::default_random_engine re = [](){
+      std::random_device rd;
+      return std::default_random_engine(rd());
+    }();
 
-    world.system<engine::space::Rotation>("EPILEPTIC_ROTATION")
-      .iter([](flecs::iter it, engine::space::Rotation* rotation) {
-        for (auto i: it) {
-          rotation[i].rad += it.delta_system_time();
+    const float global_speed = 0.3f;
+    std::uniform_real_distribution<float> color_dist(0,1);
+    std::uniform_real_distribution<float> radius_dist(0.35,5);
+    std::uniform_real_distribution<float> speed_dist(1,1.3);
+    std::uniform_real_distribution<float> scale_dist(0.1,0.3);
+    std::uniform_real_distribution<float> initial_angle_dist(0, 3.1415 * 2);
+    std::uniform_int_distribution<int> negative_speed(0,0);
+
+    for (int i = 0; i < 1000; ++i) {
+      const float scale = scale_dist(re);
+      world.entity()
+        .is_a(prefab)
+        .set<engine::graphics::Color>({color_dist(re), color_dist(re), color_dist(re)})
+        .set<engine::space::Scale>({scale, scale})
+        .set<Orbit>({
+          .angular_speed = speed_dist(re) * (negative_speed(re) ? -1.0f : 1.0f),
+          .angle = initial_angle_dist(re),
+          .radius = radius_dist(re)
+        });
+    }
+
+    world.system<Position, Rotation, Orbit>("Orbit")
+      .iter([global_speed](flecs::iter it, Position* position, Rotation* rotation, Orbit* orbit) {
+        const float dt = it.delta_system_time() * global_speed;
+        for (auto i : it) {
+          orbit[i].angle += dt * orbit[i].angular_speed / std::pow(orbit[i].radius, 1.5f);
+
+          rotation[i].rad = orbit[i].angle + 3.1415f/2.0f;
+
+          position[i].x = orbit[i].radius * std::cos(orbit[i].angle);
+          position[i].y = orbit[i].radius * std::sin(orbit[i].angle);
         }
       });
 
-    world.system<engine::graphics::Layer>("EPILEPTIC_LAYER")
-      .iter([re, layer_dist](flecs::iter it, engine::graphics::Layer* layer) {
-//        for (auto i : it) {
-//          auto z = (*layer_dist)(*re);
-//          layer[i].z = 1;
-//        }
-      });
+
   }
 
   window->setVerticalSyncEnabled(true);

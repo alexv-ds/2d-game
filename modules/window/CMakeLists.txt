@@ -12,6 +12,8 @@ add_library(engine-window
   src/graphics-components.cpp
   src/graphics-components-private.hpp
   src/graphics-systems.cpp
+  include/engine/graphics/predefined-colors.hpp
+  include/engine/graphics/components.hpp
 )
 add_library(engine::window ALIAS engine-window)
 target_include_directories(engine-window PUBLIC include)
