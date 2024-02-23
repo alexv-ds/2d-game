@@ -19,10 +19,12 @@ CPMDeclarePackage(flecs
   NAME flecs
   SYSTEM YES
   EXCLUDE_FROM_ALL YES
-  URL
-    "https://github.com/SanderMertens/flecs/archive/refs/tags/v3.2.11.tar.gz"
-    "URL_HASH"
-    "SHA3_256=6ae1ead882dc7a3684937ff43cc3d0aa9760d6b9e66a6372a657e13809c0f284"
+#  URL
+#    "https://github.com/SanderMertens/flecs/archive/refs/tags/v3.2.11.tar.gz"
+#    "URL_HASH"
+#    "SHA3_256=6ae1ead882dc7a3684937ff43cc3d0aa9760d6b9e66a6372a657e13809c0f284"
+  GITHUB_REPOSITORY SanderMertens/flecs
+  GIT_TAG fd1e7dc71d0abfc205297a270458e36a3c6d578f
   OPTIONS
     "FLECS_STATIC ON"
     "FLECS_SHARED OFF"

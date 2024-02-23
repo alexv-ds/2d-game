@@ -9,6 +9,9 @@ add_library(engine-window
   src/window-components.cpp
   include/engine/graphics.hpp
   src/graphics.cpp
+  src/graphics-components.cpp
+  src/graphics-components-private.hpp
+  src/graphics-systems.cpp
 )
 add_library(engine::window ALIAS engine-window)
 target_include_directories(engine-window PUBLIC include)

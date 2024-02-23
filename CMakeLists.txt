@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 
+cmake_policy(SET CMP0069 NEW)
+
 project(2d-game VERSION 0.0.1 LANGUAGES CXX)
 
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)

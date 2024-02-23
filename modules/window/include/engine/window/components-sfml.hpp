@@ -6,6 +6,7 @@ namespace engine::window {
 
   struct SFML_RenderWindow {
     eastl::shared_ptr<sf::RenderWindow> window;
+    float cells_x = 10;
   };
 
   namespace phases {
