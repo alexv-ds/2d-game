@@ -211,7 +211,14 @@ namespace engine::graphics {
 
     sf::RenderTarget& render_target = *render->window;
     if (it.is_self(3)) {
-
+      for (auto i: it) {
+        render_target.draw(
+          quad[i].vertexes.data(),
+          quad_vert_count,
+          sf::PrimitiveType::Triangles,
+          states[i].states
+        );
+      }
     } else {
       render_target.draw(
         reinterpret_cast<const sf::Vertex*>(quad),
@@ -235,12 +242,12 @@ namespace engine::graphics {
         return std::default_random_engine(rd());
       }();
 
-      for (auto i : it) {
+      for (auto i: it) {
         layer[i].z += distribution(random_engine);
       }
     }
 
-    for (auto i : it) {
+    for (auto i: it) {
       it.entity(i).remove<FixEqualLayerBlinking>();
     }
   }

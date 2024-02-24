@@ -35,14 +35,11 @@ int main() {
   world.import<engine::Space>();
   world.import<engine::Graphics>();
 
-  for (const sf::VideoMode& mode : sf::VideoMode::getFullscreenModes()) {
-    SPDLOG_WARN("{} {} {}", mode.size.x, mode.size.y, mode.bitsPerPixel);
-  }
   eastl::shared_ptr window = eastl::make_shared<sf::RenderWindow>(
     sf::VideoMode::getDesktopMode(),
     "Window",
-    sf::Style::Default,
-    sf::State::Fullscreen
+    sf::Style::Default
+//    sf::State::Fullscreen
   );
   world.set<engine::window::SFML_RenderWindow>(
     {
@@ -68,7 +65,7 @@ int main() {
     using namespace engine::space;
 
     auto prefab = world.prefab("prefab")
-      .is_a<engine::graphics::material::BlendAlpha>()
+      .is_a<engine::graphics::material::BlendAdd>()
       .add<engine::space::Size>()
       .add<engine::space::Position>()
       .add<engine::space::Rotation>()
@@ -88,15 +85,15 @@ int main() {
       return std::default_random_engine(rd());
     }();
 
-    const float global_speed = 0.3f;
-    std::uniform_real_distribution<float> color_dist(0,1);
-    std::uniform_real_distribution<float> radius_dist(0.35,5);
+    const float global_speed = 1.0f;
+    std::uniform_real_distribution<float> color_dist(0,0.6);
+    std::uniform_real_distribution<float> radius_dist(0.0001,5);
     std::uniform_real_distribution<float> speed_dist(1,1.3);
     std::uniform_real_distribution<float> scale_dist(0.1,0.3);
     std::uniform_real_distribution<float> initial_angle_dist(0, 3.1415 * 2);
     std::uniform_int_distribution<int> negative_speed(0,0);
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 100000; ++i) {
       const float scale = scale_dist(re);
       world.entity()
         .is_a(prefab)
@@ -121,8 +118,6 @@ int main() {
           position[i].y = orbit[i].radius * std::sin(orbit[i].angle);
         }
       });
-
-
   }
 
   window->setVerticalSyncEnabled(true);
