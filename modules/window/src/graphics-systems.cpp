@@ -197,7 +197,7 @@ namespace engine::graphics {
 
   static void Draw(flecs::iter it,
                    window::SFML_RenderWindow* render /* singleton */,
-                   const SFML_Quad* quad /* singleton */,
+                   const SFML_Quad* quad /* self */,
                    const SFML_RenderStates* states /* instanced */,
                    const Layer* /* instanced */) {
     constexpr std::size_t quad_vert_count = decltype(SFML_Quad::vertexes)::count;
@@ -210,11 +210,6 @@ namespace engine::graphics {
     }
 
     sf::RenderTarget& render_target = *render->window;
-
-    /*for(auto i : it) {
-      SPDLOG_WARN("{} - {}", (flecs::entity_t)it.entity(i), it.entity(i).is_valid());
-    }
-    SPDLOG_WARN("-------------");*/
 
     if (it.is_self(3)) {
       for (auto i: it) {
