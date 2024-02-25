@@ -210,6 +210,12 @@ namespace engine::graphics {
     }
 
     sf::RenderTarget& render_target = *render->window;
+
+    /*for(auto i : it) {
+      SPDLOG_WARN("{} - {}", (flecs::entity_t)it.entity(i), it.entity(i).is_valid());
+    }
+    SPDLOG_WARN("-------------");*/
+
     if (it.is_self(3)) {
       for (auto i: it) {
         render_target.draw(
