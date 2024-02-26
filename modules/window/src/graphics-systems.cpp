@@ -149,6 +149,132 @@ namespace engine::graphics {
     }
   }
 
+  static void UpdateVertexesPositionColorAlpha_V2(flecs::iter it,
+                                                  const space::Size* size /* instanced */,
+                                                  const Color* color /* instanced */,
+                                                  const Alpha* alpha /* instanced, optional */,
+                                                  SFML_Quad* quad /* self */,
+                                                  const space::Transform* transform /* self */) {
+    static_assert(decltype(SFML_Quad::vertexes)::count == 6);
+
+    // region Size
+    if (it.is_self(1)) {
+      for (auto i: it) {
+        quad[i].vertexes[0].position = {-size[i].x * 0.5f, size[i].y * 0.5f};
+        quad[i].vertexes[1].position = {-size[i].x * 0.5f, -size[i].y * 0.5f};
+        quad[i].vertexes[2].position = {size[i].x * 0.5f, -size[i].y * 0.5f};
+        quad[i].vertexes[3].position = {-size[i].x * 0.5f, size[i].y * 0.5f};
+        quad[i].vertexes[4].position = {size[i].x * 0.5f, -size[i].y * 0.5f};
+        quad[i].vertexes[5].position = {size[i].x * 0.5f, size[i].y * 0.5f};
+      }
+    } else {
+      const sf::Vector2f p_0 = {-size->x * 0.5f, size->y * 0.5f};
+      const sf::Vector2f p_1 = {-size->x * 0.5f, -size->y * 0.5f};
+      const sf::Vector2f p_2 = {size->x * 0.5f, -size->y * 0.5f};
+      const sf::Vector2f p_3 = {-size->x * 0.5f, size->y * 0.5f};
+      const sf::Vector2f p_4 = {size->x * 0.5f, -size->y * 0.5f};
+      const sf::Vector2f p_5 = {size->x * 0.5f, size->y * 0.5f};
+      for (auto i: it) {
+        quad[i].vertexes[0].position = p_0;
+        quad[i].vertexes[1].position = p_1;
+        quad[i].vertexes[2].position = p_2;
+        quad[i].vertexes[3].position = p_3;
+        quad[i].vertexes[4].position = p_4;
+        quad[i].vertexes[5].position = p_5;
+      }
+    }
+    // endregion
+
+    // region Color
+    if (it.is_self(2)) {
+      for (auto i: it) {
+        const sf::Color sf_color(
+          static_cast<std::uint8_t>(
+            eastl::clamp(static_cast<std::uint32_t>(color[i].r * 255), std::uint32_t{0}, std::uint32_t{255})
+          ),
+          static_cast<std::uint8_t>(
+            eastl::clamp(static_cast<std::uint32_t>(color[i].g * 255), std::uint32_t{0}, std::uint32_t{255})
+          ),
+          static_cast<std::uint8_t>(
+            eastl::clamp(static_cast<std::uint32_t>(color[i].b * 255), std::uint32_t{0}, std::uint32_t{255})
+          )
+        );
+
+        quad[i].vertexes[0].color = sf_color;
+        quad[i].vertexes[1].color = sf_color;
+        quad[i].vertexes[2].color = sf_color;
+        quad[i].vertexes[3].color = sf_color;
+        quad[i].vertexes[4].color = sf_color;
+        quad[i].vertexes[5].color = sf_color;
+      }
+    } else {
+      const sf::Color sf_color(
+        static_cast<std::uint8_t>(
+          eastl::clamp(static_cast<std::uint32_t>(color->r * 255), std::uint32_t{0}, std::uint32_t{255})
+        ),
+        static_cast<std::uint8_t>(
+          eastl::clamp(static_cast<std::uint32_t>(color->g * 255), std::uint32_t{0}, std::uint32_t{255})
+        ),
+        static_cast<std::uint8_t>(
+          eastl::clamp(static_cast<std::uint32_t>(color->b * 255), std::uint32_t{0}, std::uint32_t{255})
+        )
+      );
+
+      for (auto i: it) {
+        quad[i].vertexes[0].color = sf_color;
+        quad[i].vertexes[1].color = sf_color;
+        quad[i].vertexes[2].color = sf_color;
+        quad[i].vertexes[3].color = sf_color;
+        quad[i].vertexes[4].color = sf_color;
+        quad[i].vertexes[5].color = sf_color;
+      }
+    }
+    // endregion
+
+    // region Alpha
+    if (alpha) {
+      if (it.is_self(3)) {
+        for (auto i: it) {
+          const std::uint8_t a = eastl::clamp(
+            static_cast<std::uint8_t>(alpha[i].a * 255),
+            std::uint8_t{0},
+            std::uint8_t{255}
+          );
+          quad[i].vertexes[0].color.a = a;
+          quad[i].vertexes[1].color.a = a;
+          quad[i].vertexes[2].color.a = a;
+          quad[i].vertexes[3].color.a = a;
+          quad[i].vertexes[4].color.a = a;
+          quad[i].vertexes[5].color.a = a;
+        }
+      } else {
+        const std::uint8_t a = eastl::clamp(
+          static_cast<std::uint8_t>(alpha->a * 255),
+          std::uint8_t{0},
+          std::uint8_t{255}
+        );
+
+        for (auto i: it) {
+          quad[i].vertexes[0].color.a = a;
+          quad[i].vertexes[1].color.a = a;
+          quad[i].vertexes[2].color.a = a;
+          quad[i].vertexes[3].color.a = a;
+          quad[i].vertexes[4].color.a = a;
+          quad[i].vertexes[5].color.a = a;
+        }
+      }
+    }
+    // endregion
+
+    // apply transform
+    for (auto i: it) {
+      for (sf::Vertex& vertex: quad[i].vertexes) {
+        const glm::vec3 new_position = glm::vec3(vertex.position.x, vertex.position.y, 0.0f) * transform[i];
+        vertex.position = {new_position.x, new_position.y};
+      }
+    }
+  }
+
   static void UpdateTransform(flecs::iter it,
                               const space::Position* position /* self */,
                               const space::Rotation* rotation /* instanced, optional */,
@@ -190,9 +316,6 @@ namespace engine::graphics {
     }
     // endregion
 
-    for (auto i: it) {
-      auto matrix = transform[i].matrix;
-    }
   }
 
   static void Draw(flecs::iter it,
@@ -286,7 +409,17 @@ namespace engine::graphics {
       .arg(3).optional()
       .arg(4).self()
       .arg(5).self()
-      .iter(UpdateVertexesPositionColorAlpha);
+      .iter(UpdateVertexesPositionColorAlpha)
+      .disable();
+
+    world.system<const space::Size, const Color, const Alpha, SFML_Quad, const space::Transform>(
+        "UpdateVertexesPositionColorAlpha_V2")
+      .instanced()
+      .kind(flecs::PostUpdate)
+      .arg(3).optional()
+      .arg(4).self()
+      .arg(5).self()
+      .iter(UpdateVertexesPositionColorAlpha_V2);
 
     world.system<window::SFML_RenderWindow>("DrawPrepare")
       .kind<window::phases::SFML_WindowDisplayPre>()

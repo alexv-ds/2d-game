@@ -23,5 +23,7 @@ namespace engine::space {
     world.component<Recalculate>();
 
     world.component<Global>();
+
+    world.component<Transform>();
   }
 }

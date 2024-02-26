@@ -1,5 +1,6 @@
 #pragma once
 #include <flecs.h>
+#include <glm/mat3x3.hpp>
 
 namespace engine {
 
@@ -31,6 +32,11 @@ namespace engine {
 
     struct Static {};
     struct Recalculate {};
+
+    struct Transform : glm::mat3 {
+      using glm::mat3::mat3;
+      using glm::mat3::operator=;
+    };
   }
 
 }

@@ -22,12 +22,14 @@ void* operator new[](size_t size,
   return new std::byte[size];
 }
 
+using namespace engine;
 
 int main() {
 #ifdef SPDLOG_ACTIVE_LEVEL
   spdlog::set_level(static_cast<spdlog::level::level_enum>(SPDLOG_ACTIVE_LEVEL));
 #endif
   flecs::world world;
+
 
   //flecs::log::set_level(0);
 
@@ -65,7 +67,7 @@ int main() {
     using namespace engine::space;
 
     auto prefab = world.prefab("prefab")
-      .is_a<engine::graphics::material::BlendAdd>()
+      .is_a<engine::graphics::material::BlendAlpha>()
       .add<engine::space::Size>()
       .add<engine::space::Position>()
       .add<engine::space::Rotation>()
@@ -78,7 +80,11 @@ int main() {
       .add<engine::space::Scale, engine::space::Global>()
       .override<engine::space::Position, engine::space::Global>()
       .override<engine::space::Rotation, engine::space::Global>()
-      .override<engine::space::Scale, engine::space::Global>();
+      .override<engine::space::Scale, engine::space::Global>()
+
+
+      .set<space::Transform>(space::Transform{1.0f})
+      .override<space::Transform>();
 
     std::default_random_engine re = [](){
       std::random_device rd;

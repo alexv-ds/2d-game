@@ -1,4 +1,5 @@
 #include <engine/graphics.hpp>
+#include <engine/space.hpp>
 #include "graphics-components-private.hpp"
 
 namespace engine::graphics {
@@ -12,8 +13,13 @@ namespace engine::graphics {
       .template add<Layer>()
       .template add<SFML_Quad>()
       .template override<SFML_Quad>()
+
+      .template set<space::Transform>(space::Transform{1.0f})
+      .template override<space::Transform>()
+
       .template add<SFML_Transform>()
       .template override<SFML_Transform>()
+
       .template set<SFML_RenderStates>({sf::RenderStates(blend_mode)})
       .template add<FixEqualLayerBlinking>()
       .template override<FixEqualLayerBlinking>();
