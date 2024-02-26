@@ -7,6 +7,10 @@
 #include <cmath>
 #include <random>
 
+#include <glm/mat3x3.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
+#include <SFML/Graphics.hpp>
+
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
 }
@@ -29,6 +33,7 @@ int main() {
   spdlog::set_level(static_cast<spdlog::level::level_enum>(SPDLOG_ACTIVE_LEVEL));
 #endif
   flecs::world world;
+
 
 
   //flecs::log::set_level(0);

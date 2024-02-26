@@ -269,8 +269,8 @@ namespace engine::graphics {
     // apply transform
     for (auto i: it) {
       for (sf::Vertex& vertex: quad[i].vertexes) {
-        const glm::vec3 new_position = glm::vec3(vertex.position.x, vertex.position.y, 0.0f) * transform[i];
-        vertex.position = {new_position.x, new_position.y};
+        //const glm::vec3 new_position = transform[i] * glm::vec3(vertex.position.x, vertex.position.y, 1.0f);
+        //vertex.position = {new_position.x, new_position.y};
       }
     }
   }
@@ -409,8 +409,7 @@ namespace engine::graphics {
       .arg(3).optional()
       .arg(4).self()
       .arg(5).self()
-      .iter(UpdateVertexesPositionColorAlpha)
-      .disable();
+      .iter(UpdateVertexesPositionColorAlpha);
 
     world.system<const space::Size, const Color, const Alpha, SFML_Quad, const space::Transform>(
         "UpdateVertexesPositionColorAlpha_V2")
