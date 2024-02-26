@@ -42,9 +42,13 @@ CPMAddPackage(
 add_subdirectory(modules/space)
 add_subdirectory(modules/window)
 
+add_executable(main_1 main.cpp)
+target_link_libraries(main_1 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
 
-add_executable(main main3.cpp
+add_executable(main_3 main3.cpp)
+target_link_libraries(main_3 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
+
+add_executable(main_2 main2.cpp
   tmp_stuff/StupidSpatial.cpp
   tmp_stuff/StupidSpatial.hpp)
-target_link_libraries(main engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
-target_include_directories(main PRIVATE ${Chipmunk2D_SOURCE_DIR}/include)
+target_link_libraries(main_2 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)

@@ -93,7 +93,7 @@ int main() {
     std::uniform_real_distribution<float> initial_angle_dist(0, 3.1415 * 2);
     std::uniform_int_distribution<int> negative_speed(0,0);
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 100000; ++i) {
       const float scale = scale_dist(re);
       world.entity()
         .is_a(prefab)
