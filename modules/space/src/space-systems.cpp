@@ -1,3 +1,5 @@
+#include <type_traits>
+#include <cstring>
 #include <flecs.h>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -46,7 +48,7 @@ namespace engine::space {
     }
   }
 
-  static void UpdateTransformKEKS(flecs::iter& it,
+  static void UpdateTransform(flecs::iter& it,
                               Transform* transform /* self */,
                               const space::Position* position /* self */,
                               const space::Rotation* rotation /* instanced, optional */,
@@ -83,6 +85,61 @@ namespace engine::space {
       }
     }
     // endregion
+  }
+
+//Описывает неповернутый прямоугольник вокруг повернутого прямоугольника
+  inline glm::vec2 describe_rectangle(glm::vec2 size, float angle) {
+    float abs_sin_angle = glm::abs(glm::sin(angle));
+    float abs_cos_angle = glm::abs(glm::cos(angle));
+    return {
+      size.x * abs_cos_angle + size.y * abs_sin_angle,
+      size.x * abs_sin_angle + size.y * abs_cos_angle
+    };
+  }
+
+  static void UpdateBBox(flecs::iter& it,
+                  BBox* bbox /* self */,
+                  const Scale* scale /* instanced, optional */,
+                  const Rotation* rotation /* instanced, optional */) {
+
+    if (scale) {
+      if (it.is_self(2)) {
+        static_assert(std::is_trivially_copyable_v<Scale>);
+        static_assert(std::is_trivially_copyable_v<BBox>);
+        static_assert(std::is_base_of_v<glm::vec2, Scale>);
+        static_assert(std::is_base_of_v<glm::vec2, BBox>);
+        static_assert(sizeof(BBox) == sizeof(Scale));
+        std::memcpy(bbox, scale, sizeof(BBox) * it.count());
+      } else {
+        for (auto i: it) {
+          bbox[i] = *scale;
+        }
+      }
+    } else {
+      for (auto i: it) {
+        bbox[i] = {1.0f, 1.0f};
+      }
+    }
+
+    if (rotation) {
+      if (it.is_self(3)) {
+        for (auto i: it) {
+          bbox[i] *= glm::vec2(
+            glm::abs(glm::sin(rotation[i])),
+            glm::abs(glm::cos(rotation[i]))
+          );
+        }
+      } else {
+        const glm::vec2 factor(
+          glm::abs(glm::sin(*rotation)),
+          glm::abs(glm::cos(*rotation))
+        );
+        for (auto i : it) {
+          bbox[i] *= factor;
+        }
+      }
+    }
+
   }
 
   void init_space_systems(flecs::world & world) {
@@ -136,6 +193,25 @@ namespace engine::space {
       .with<Recalculate>()
       .iter(UpdateScale);
 
+    world.system<BBox, const Scale, const Rotation>("UpdateBBox")
+      .instanced()
+      .kind(flecs::PostUpdate)
+      .arg(1).self()
+      .arg(2).optional()
+      .arg(3).optional()
+      .without<Static>()
+      .iter(UpdateBBox);
+
+    world.system<BBox, const Scale, const Rotation>("UpdateBBoxStatic")
+      .instanced()
+      .kind(flecs::PostUpdate)
+      .arg(1).self()
+      .arg(2).optional().second<space::Global>()
+      .arg(3).optional().second<space::Global>()
+      .with<Static>()
+      .with<Recalculate>()
+      .iter(UpdateBBox);
+
 
     world.system<
         Transform,
@@ -148,9 +224,22 @@ namespace engine::space {
       .arg(2).self().second<space::Global>()
       .arg(3).optional().second<space::Global>()
       .arg(4).optional().second<space::Global>()
-//      .without<Static>()
-      .iter(UpdateTransformKEKS);
+      .without<Static>()
+      .iter(UpdateTransform);
 
-
+    world.system<
+        Transform,
+        const space::Position,
+        const space::Rotation,
+        const space::Scale>("UpdateTransformStatic")
+      .instanced()
+      .kind(flecs::PostUpdate)
+      .arg(1).self()
+      .arg(2).self().second<space::Global>()
+      .arg(3).optional().second<space::Global>()
+      .arg(4).optional().second<space::Global>()
+      .with<Static>()
+      .with<Recalculate>()
+      .iter(UpdateTransform);
   }
 }

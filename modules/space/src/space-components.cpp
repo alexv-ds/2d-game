@@ -24,5 +24,10 @@ namespace engine::space {
     world.component<Global>();
 
     world.component<Transform>();
+
+    static_assert(sizeof(BBox) == sizeof(glm::vec2));
+    world.component<BBox>()
+      .member<decltype(BBox::x)>("x")
+      .member<decltype(BBox::y)>("y");
   }
 }

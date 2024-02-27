@@ -4,11 +4,13 @@
 #include <engine/space.hpp>
 #include <engine/graphics.hpp>
 
-#include <glm/vec2.hpp>
-#include <glm/trigonometric.hpp>
-#include <glm/common.hpp>
+#include <cmath>
+#include <random>
 
-//region eastl
+#include <glm/mat3x3.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
+#include <SFML/Graphics.hpp>
+
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
 }
@@ -23,35 +25,30 @@ void* operator new[](size_t size,
                      int line) {
   return new std::byte[size];
 }
-//endregion
 
 using namespace engine;
 
-//Описывает неповернутый прямоугольник вокруг повернутого прямоугольника
-inline glm::vec2 describe_rectangle(glm::vec2 size, float angle) {
-  float abs_sin_angle = glm::abs(glm::sin(angle));
-  float abs_cos_angle = glm::abs(glm::cos(angle));
-  return {
-    size.x * abs_cos_angle + size.y * abs_sin_angle,
-    size.x * abs_sin_angle + size.y * abs_cos_angle
-  };
-}
+struct BBoxer {};
 
 int main() {
 #ifdef SPDLOG_ACTIVE_LEVEL
   spdlog::set_level(static_cast<spdlog::level::level_enum>(SPDLOG_ACTIVE_LEVEL));
 #endif
-
   flecs::world world;
 
-  world.import<Window>();
-  world.import<Space>();
-  world.import<Graphics>();
+
+
+  //flecs::log::set_level(0);
+
+  world.import<engine::Window>();
+  world.import<engine::Space>();
+  world.import<engine::Graphics>();
 
   eastl::shared_ptr window = eastl::make_shared<sf::RenderWindow>(
     sf::VideoMode::getDesktopMode(),
     "Window",
     sf::Style::Default
+//    sf::State::Fullscreen
   );
   world.set<engine::window::SFML_RenderWindow>(
     {
@@ -59,83 +56,100 @@ int main() {
     }
   );
 
-  auto prefab = world.prefab()
-    .is_a<engine::graphics::material::BlendAlpha>()
 
-    .add<engine::space::Position>()
-    .add<engine::space::Rotation>()
-    .add<engine::space::Scale>()
+  {
+    auto _ = world.scope("entities");
 
-    .override<engine::space::Position>()
-    .override<engine::space::Rotation>()
-    .override<engine::space::Scale>()
+    struct Orbit {
+      float angular_speed = 2;
+      float angle = 0;
+      float radius = 1;
+    };
 
-    .add<engine::space::Position, engine::space::Global>()
-    .add<engine::space::Rotation, engine::space::Global>()
-    .add<engine::space::Scale, engine::space::Global>()
+    world.component<Orbit>()
+      .member<float>("angular_speed")
+      .member<float>("angle")
+      .member<float>("radius");
 
-    .override<engine::space::Position, engine::space::Global>()
-    .override<engine::space::Rotation, engine::space::Global>()
-    .override<engine::space::Scale, engine::space::Global>();
+    using namespace engine::space;
 
-  struct RotateMe {};
-  world.component<RotateMe>();
+    auto prefab = world.prefab("prefab")
+      .is_a<engine::graphics::material::BlendAlpha>()
+      .add<engine::space::Position>()
+      .add<engine::space::Rotation>()
+      .add<engine::space::Scale>()
+      .override<engine::space::Position>()
+      .override<engine::space::Rotation>()
+      .override<engine::space::Scale>()
+      .add<engine::space::Position, engine::space::Global>()
+      .add<engine::space::Rotation, engine::space::Global>()
+      .add<engine::space::Scale, engine::space::Global>()
+      .override<engine::space::Position, engine::space::Global>()
+      .override<engine::space::Rotation, engine::space::Global>()
+      .override<engine::space::Scale, engine::space::Global>()
+      .set<space::Transform>(space::Transform{1.0f})
+      .override<space::Transform>();
 
-  world.system<const RotateMe, space::Rotation>()
-    .each([](flecs::entity e, const RotateMe&, space::Rotation& rotation) {
-      rotation.rad -= 0.01;
-    });
+    std::default_random_engine re = [](){
+      std::random_device rd;
+      return std::default_random_engine(rd());
+    }();
 
-  world.system<const RotateMe, space::Scale>()
-    .arg(2).self()
-    .each([](flecs::entity e, const RotateMe&, space::Scale& scale) {
-      const float now = std::chrono::duration_cast<std::chrono::duration<float>>(
-        std::chrono::high_resolution_clock::now().time_since_epoch()
-      ).count();
-      const float factor = glm::max(0.001f, glm::abs(glm::sin(now)));
-      scale.x = factor;
-      scale.y = factor;
-    });
+    const float global_speed = 1.0f;
+    std::uniform_real_distribution<float> color_dist(0.83,0.83);
+    std::uniform_real_distribution<float> radius_dist(0.0001,5);
+    std::uniform_real_distribution<float> speed_dist(1,1.3);
+    std::uniform_real_distribution<float> scale_dist(0.1,0.3);
+    std::uniform_real_distribution<float> initial_angle_dist(0, 3.1415 * 2);
+    std::uniform_int_distribution<int> negative_speed(0,0);
 
-  auto e = world.entity("TARGET")
-    .add<RotateMe>()
-    .set<graphics::Layer>({-1})
-    .add<space::Scale>()
-    .is_a(prefab);
+    for (int i = 0; i < 1000; ++i) {
+      const float scale = scale_dist(re);
+      auto e = world.entity()
+        .is_a(prefab)
+        .set<engine::graphics::Color>({color_dist(re), color_dist(re), color_dist(re)})
+        .set<engine::space::Scale>({scale, scale})
+        .set<Orbit>(
+          {
+            .angular_speed = speed_dist(re) * (negative_speed(re) ? -1.0f : 1.0f),
+            .angle = initial_angle_dist(re),
+            .radius = radius_dist(re)
+          }
+        )
+        .add<space::BBox>();
+      world.entity()
+        .child_of(e)
+        .is_a<graphics::material::BlendAlpha>()
+        .add<engine::space::Position>()
+        .add<engine::space::Scale>()
+        .add<engine::space::Position, engine::space::Global>()
+        .add<engine::space::Scale, engine::space::Global>()
+        .add<BBoxer>()
+        .set<graphics::Layer>(10)
+        .set<graphics::Alpha>(0.3f)
+        .set<engine::graphics::Color>(graphics::color::red);
+    }
 
-  struct SyncWith {};
-  world.component<SyncWith>()
-    .add(flecs::Traversable);
+    world.system<space::Scale, const space::BBox>("SyncBbox")
+      .arg(1).self()
+      .arg(2).self().parent()
+      .each([](flecs::entity e, space::Scale& scale, const space::BBox& parent_bbox){
+        //scale = parent_bbox;
+      });
 
-  world.entity("BBOX")
-    .set<graphics::Color>({graphics::color::red})
-    .set<graphics::Alpha>({0.3})
-    .add<space::Scale>()
-    .add<SyncWith>(e)
-    .is_a(prefab);
+    world.system<Position, Rotation, Orbit>("Orbit")
+      .iter([global_speed](flecs::iter it, Position* position, Rotation* rotation, Orbit* orbit) {
+        const float dt = it.delta_system_time() * global_speed;
+        for (auto i : it) {
+          orbit[i].angle += dt * orbit[i].angular_speed / std::pow(orbit[i].radius, 1.5f);
 
-  world.system<space::Scale, space::Rotation, space::Scale>()
-    .arg(1).self()
-    .arg(2).up<SyncWith>()
-    .arg(3).up<SyncWith>()
-    .each([](flecs::entity e, space::Scale& size, space::Rotation& up_rotation, space::Scale& up_size){
-      const glm::vec2 newsize = describe_rectangle({up_size.x, up_size.y}, up_rotation.rad);
-      size.x = newsize.x;
-      size.y = newsize.y;
-    });
+          rotation[i].rad = orbit[i].angle + 3.1415f/2.0f;
 
-
-
-
-
-
-
-//  for (float x = -4.0f; x <= 4.0f; ++x) {
-//    for (float y = -4.0f; y <= 4.0f; ++y) {
-//      auto hash = ((std::int64_t)(x / 1.0f) * 73856093) ^ ((std::int64_t) (y / 1.0f) * 19349663);
-//      SPDLOG_INFO("{},{} - {}", x, y, hash);
-//    }
-//  }
+          position[i].x = orbit[i].radius * std::cos(orbit[i].angle);
+          position[i].y = orbit[i].radius * std::sin(orbit[i].angle);
+        }
+      });
+  }
 
   window->setVerticalSyncEnabled(true);
   return world.app()

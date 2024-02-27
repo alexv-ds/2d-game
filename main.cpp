@@ -85,8 +85,6 @@ int main() {
       .override<engine::space::Position, engine::space::Global>()
       .override<engine::space::Rotation, engine::space::Global>()
       .override<engine::space::Scale, engine::space::Global>()
-
-
       .set<space::Transform>(space::Transform{1.0f})
       .override<space::Transform>();
 
@@ -130,7 +128,7 @@ int main() {
       });
   }
 
-  //window->setVerticalSyncEnabled(true);
+  window->setVerticalSyncEnabled(true);
   return world.app()
     .enable_monitor(true)
     .enable_rest()

@@ -10,10 +10,16 @@ namespace engine::graphics {
 
   struct Alpha {
     float a = 1; // range [0,1]
+
+    inline Alpha() = default;
+    inline Alpha(float a): a(a) {} // NOLINT(google-explicit-constructor)
   };
 
   struct Layer {
     float z = 0; // range [-inf, +inf]
+
+    inline Layer() = default;
+    inline Layer(float z): z(z) {} // NOLINT(google-explicit-constructor)
   };
 
   struct OnDraw {};
