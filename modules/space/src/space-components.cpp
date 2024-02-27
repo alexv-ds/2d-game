@@ -3,10 +3,8 @@
 
 namespace engine::space {
   void init_space_components(flecs::world& world) {
-    world.component<Size>()
-      .member<decltype(Size::x)>("x")
-      .member<decltype(Size::y)>("y");
 
+    static_assert(sizeof(Position) == sizeof(glm::vec2));
     world.component<Position>()
       .member<decltype(Position::x)>("x")
       .member<decltype(Position::y)>("y");
@@ -14,6 +12,7 @@ namespace engine::space {
     world.component<Rotation>()
       .member<decltype(Rotation::rad)>("rad");
 
+    static_assert(sizeof(Scale) == sizeof(glm::vec2));
     world.component<Scale>()
       .member<decltype(Scale::x)>("x")
       .member<decltype(Scale::y)>("y");

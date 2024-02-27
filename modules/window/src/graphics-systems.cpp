@@ -24,43 +24,47 @@ namespace engine::graphics {
   }
 
   static void UpdateVertexesPositionColorAlpha_V2(flecs::iter it,
-                                                  const space::Size* size /* instanced */,
                                                   const Color* color /* instanced */,
                                                   const Alpha* alpha /* instanced, optional */,
                                                   SFML_Quad* quad /* self */,
                                                   const space::Transform* transform /* self */) {
     static_assert(decltype(SFML_Quad::vertexes)::count == 6);
 
-    // region Size
-    if (it.is_self(1)) {
-      for (auto i: it) {
-        quad[i].vertexes[0].position = {-size[i].x * 0.5f, size[i].y * 0.5f};
-        quad[i].vertexes[1].position = {-size[i].x * 0.5f, -size[i].y * 0.5f};
-        quad[i].vertexes[2].position = {size[i].x * 0.5f, -size[i].y * 0.5f};
-        quad[i].vertexes[3].position = {-size[i].x * 0.5f, size[i].y * 0.5f};
-        quad[i].vertexes[4].position = {size[i].x * 0.5f, -size[i].y * 0.5f};
-        quad[i].vertexes[5].position = {size[i].x * 0.5f, size[i].y * 0.5f};
-      }
-    } else {
-      const sf::Vector2f p_0 = {-size->x * 0.5f, size->y * 0.5f};
-      const sf::Vector2f p_1 = {-size->x * 0.5f, -size->y * 0.5f};
-      const sf::Vector2f p_2 = {size->x * 0.5f, -size->y * 0.5f};
-      const sf::Vector2f p_3 = {-size->x * 0.5f, size->y * 0.5f};
-      const sf::Vector2f p_4 = {size->x * 0.5f, -size->y * 0.5f};
-      const sf::Vector2f p_5 = {size->x * 0.5f, size->y * 0.5f};
-      for (auto i: it) {
-        quad[i].vertexes[0].position = p_0;
-        quad[i].vertexes[1].position = p_1;
-        quad[i].vertexes[2].position = p_2;
-        quad[i].vertexes[3].position = p_3;
-        quad[i].vertexes[4].position = p_4;
-        quad[i].vertexes[5].position = p_5;
-      }
+    for (auto i : it) {
+      quad[i].vertexes[0] = {
+        .position = {-0.5f, 0.5f},
+        .color = sf::Color::White,
+        .texCoords = {}
+      };
+      quad[i].vertexes[1] = {
+        .position = {-0.5f, -0.5f},
+        .color = sf::Color::White,
+        .texCoords = {}
+      };
+      quad[i].vertexes[2] = {
+        .position = {0.5f, -0.5f},
+        .color = sf::Color::White,
+        .texCoords = {}
+      };
+      quad[i].vertexes[3] = {
+        .position = {-0.5f, 0.5f},
+        .color = sf::Color::White,
+        .texCoords = {}
+      };
+      quad[i].vertexes[4] = {
+        .position = {0.5f, -0.5f},
+        .color = sf::Color::White,
+        .texCoords = {}
+      };
+      quad[i].vertexes[5] = {
+        .position = {0.5f, 0.5f},
+        .color = sf::Color::White,
+        .texCoords = {}
+      };
     }
-    // endregion
 
     // region Color
-    if (it.is_self(2)) {
+    if (it.is_self(1)) {
       for (auto i: it) {
         const sf::Color sf_color(
           static_cast<std::uint8_t>(
@@ -107,7 +111,7 @@ namespace engine::graphics {
 
     // region Alpha
     if (alpha) {
-      if (it.is_self(3)) {
+      if (it.is_self(2)) {
         for (auto i: it) {
           const std::uint8_t a = eastl::clamp(
             static_cast<std::uint8_t>(alpha[i].a * 255),
@@ -220,13 +224,13 @@ namespace engine::graphics {
   void init_graphics_systems(flecs::world & world) {
     [[maybe_unused]] auto _ = world.scope("systems");
 
-    world.system<const space::Size, const Color, const Alpha, SFML_Quad, const space::Transform>(
+    world.system<const Color, const Alpha, SFML_Quad, const space::Transform>(
         "UpdateVertexesPositionColorAlpha_V2")
       .instanced()
       .kind(flecs::PostUpdate)
-      .arg(3).optional()
+      .arg(2).optional()
+      .arg(3).self()
       .arg(4).self()
-      .arg(5).self()
       .iter(UpdateVertexesPositionColorAlpha_V2);
 
     world.system<window::SFML_RenderWindow>("DrawPrepare")

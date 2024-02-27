@@ -10,11 +10,6 @@ namespace engine {
   };
 
   namespace space {
-    struct Size {
-      float x = 1;
-      float y = 1;
-    };
-
     struct Position : glm::vec2 {
       using glm::vec2::vec2;
       using glm::vec2::operator=;

@@ -73,7 +73,6 @@ int main() {
 
     auto prefab = world.prefab("prefab")
       .is_a<engine::graphics::material::BlendAlpha>()
-      .add<engine::space::Size>()
       .add<engine::space::Position>()
       .add<engine::space::Rotation>()
       .add<engine::space::Scale>()
