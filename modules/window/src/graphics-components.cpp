@@ -17,9 +17,6 @@ namespace engine::graphics {
       .template set<space::Transform>(space::Transform{1.0f})
       .template override<space::Transform>()
 
-      .template add<SFML_Transform>()
-      .template override<SFML_Transform>()
-
       .template set<SFML_RenderStates>({sf::RenderStates(blend_mode)})
       .template add<FixEqualLayerBlinking>()
       .template override<FixEqualLayerBlinking>();
@@ -47,7 +44,6 @@ namespace engine::graphics {
 
       world.component<SFML_Quad>();
       world.component<SFML_RenderStates>();
-      world.component<SFML_Transform>();
     }
 
     // materials

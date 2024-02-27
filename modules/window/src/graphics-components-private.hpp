@@ -12,8 +12,4 @@ namespace engine::graphics {
   struct SFML_RenderStates {
     sf::RenderStates states;
   };
-
-  struct SFML_Transform {
-    sf::Transform matrix;
-  };
 }

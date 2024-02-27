@@ -1,6 +1,7 @@
 #pragma once
 #include <flecs.h>
 #include <glm/mat3x3.hpp>
+#include <glm/vec2.hpp>
 
 namespace engine {
 
@@ -14,18 +15,18 @@ namespace engine {
       float y = 1;
     };
 
-    struct Position {
-      float x = 0;
-      float y = 0;
+    struct Position : glm::vec2 {
+      using glm::vec2::vec2;
+      using glm::vec2::operator=;
     };
 
     struct Rotation {
       float rad = 0;
     };
 
-    struct Scale {
-      float x = 1;
-      float y = 1;
+    struct Scale : glm::vec2 {
+      using glm::vec2::vec2;
+      using glm::vec2::operator=;
     };
 
     struct Global {};
