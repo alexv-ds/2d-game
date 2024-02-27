@@ -79,7 +79,6 @@ void init_components(flecs::world & world) {
 
   world.prefab<BodyPrefab>()
     .is_a<engine::graphics::material::BlendAdd>()
-    .add<engine::space::Size>()
 
     .add<engine::space::Position>()
     .add<engine::space::Rotation>()

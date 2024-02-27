@@ -61,7 +61,6 @@ int main() {
 
   auto prefab = world.prefab()
     .is_a<engine::graphics::material::BlendAlpha>()
-    .add<engine::space::Size>()
 
     .add<engine::space::Position>()
     .add<engine::space::Rotation>()
@@ -87,9 +86,9 @@ int main() {
       rotation.rad -= 0.01;
     });
 
-  world.system<const RotateMe, space::Size>()
+  world.system<const RotateMe, space::Scale>()
     .arg(2).self()
-    .each([](flecs::entity e, const RotateMe&, space::Size& scale) {
+    .each([](flecs::entity e, const RotateMe&, space::Scale& scale) {
       const float now = std::chrono::duration_cast<std::chrono::duration<float>>(
         std::chrono::high_resolution_clock::now().time_since_epoch()
       ).count();
@@ -101,7 +100,7 @@ int main() {
   auto e = world.entity("TARGET")
     .add<RotateMe>()
     .set<graphics::Layer>({-1})
-    .add<space::Size>()
+    .add<space::Scale>()
     .is_a(prefab);
 
   struct SyncWith {};
@@ -111,15 +110,15 @@ int main() {
   world.entity("BBOX")
     .set<graphics::Color>({graphics::color::red})
     .set<graphics::Alpha>({0.3})
-    .add<space::Size>()
+    .add<space::Scale>()
     .add<SyncWith>(e)
     .is_a(prefab);
 
-  world.system<space::Size, space::Rotation, space::Size>()
+  world.system<space::Scale, space::Rotation, space::Scale>()
     .arg(1).self()
     .arg(2).up<SyncWith>()
     .arg(3).up<SyncWith>()
-    .each([](flecs::entity e, space::Size& size, space::Rotation& up_rotation, space::Size& up_size){
+    .each([](flecs::entity e, space::Scale& size, space::Rotation& up_rotation, space::Scale& up_size){
       const glm::vec2 newsize = describe_rectangle({up_size.x, up_size.y}, up_rotation.rad);
       size.x = newsize.x;
       size.y = newsize.y;
