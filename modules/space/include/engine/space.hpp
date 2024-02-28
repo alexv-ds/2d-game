@@ -50,6 +50,7 @@ namespace engine {
       using glm::vec2::operator=;
     };
 
+    struct IgnoreParentScale {};
   }
 
 }

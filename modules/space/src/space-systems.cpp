@@ -35,7 +35,7 @@ namespace engine::space {
   }
 
   static void UpdateScale(flecs::iter& it, const Scale* local, Scale* global, const Scale* parent) {
-    if (parent) {
+    if (parent && !it.is_set(4)) {
       for (auto i: it) {
         global[i].x = local[i].x * parent[i].x;
         global[i].y = local[i].y * parent[i].y;
@@ -124,18 +124,21 @@ namespace engine::space {
     if (rotation) {
       if (it.is_self(3)) {
         for (auto i: it) {
-          bbox[i] *= glm::vec2(
-            glm::abs(glm::sin(rotation[i])),
-            glm::abs(glm::cos(rotation[i]))
+          const float abs_sin_angle = glm::abs(glm::sin(rotation[i]));
+          const float abs_cos_angle = glm::abs(glm::cos(rotation[i]));
+          bbox[i] = glm::vec2(
+            bbox[i].x * abs_cos_angle + bbox[i].y * abs_sin_angle,
+            bbox[i].x * abs_sin_angle + bbox[i].y * abs_cos_angle
           );
         }
       } else {
-        const glm::vec2 factor(
-          glm::abs(glm::sin(*rotation)),
-          glm::abs(glm::cos(*rotation))
-        );
+        const float abs_sin_angle = glm::abs(glm::sin(*rotation));
+        const float abs_cos_angle = glm::abs(glm::cos(*rotation));
         for (auto i : it) {
-          bbox[i] *= factor;
+          bbox[i] = glm::vec2(
+            bbox[i].x * abs_cos_angle + bbox[i].y * abs_sin_angle,
+            bbox[i].x * abs_sin_angle + bbox[i].y * abs_cos_angle
+          );
         }
       }
     }
@@ -182,6 +185,7 @@ namespace engine::space {
       .kind(flecs::PostUpdate)
       .arg(2).second<Global>()
       .arg(3).cascade(flecs::ChildOf).optional().second<Global>()
+      .with<IgnoreParentScale>().optional()
       .without<Static>()
       .iter(UpdateScale);
 
@@ -189,10 +193,12 @@ namespace engine::space {
       .kind(flecs::PostUpdate)
       .arg(2).second<Global>()
       .arg(3).cascade(flecs::ChildOf).optional().second<Global>()
+      .with<IgnoreParentScale>().optional()
       .with<Static>()
       .with<Recalculate>()
       .iter(UpdateScale);
 
+    // UpdateBBox
     world.system<BBox, const Scale, const Rotation>("UpdateBBox")
       .instanced()
       .kind(flecs::PostUpdate)

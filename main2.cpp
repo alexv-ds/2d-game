@@ -106,6 +106,7 @@ int main() {
     for (int i = 0; i < 1000; ++i) {
       const float scale = scale_dist(re);
       auto e = world.entity()
+        .set_doc_name("entity")
         .is_a(prefab)
         .set<engine::graphics::Color>({color_dist(re), color_dist(re), color_dist(re)})
         .set<engine::space::Scale>({scale, scale})
@@ -118,23 +119,30 @@ int main() {
         )
         .add<space::BBox>();
       world.entity()
+        .set_doc_name("bbox")
         .child_of(e)
         .is_a<graphics::material::BlendAlpha>()
         .add<engine::space::Position>()
-        .add<engine::space::Scale>()
+        .set<engine::space::Scale>(space::Scale{1})
         .add<engine::space::Position, engine::space::Global>()
         .add<engine::space::Scale, engine::space::Global>()
         .add<BBoxer>()
+        .add<space::IgnoreParentScale>()
         .set<graphics::Layer>(10)
         .set<graphics::Alpha>(0.3f)
         .set<engine::graphics::Color>(graphics::color::red);
     }
 
-    world.system<space::Scale, const space::BBox>("SyncBbox")
+    world.system<space::Scale, const space::BBox, const space::Scale>("SyncBbox")
+      .instanced()
       .arg(1).self()
       .arg(2).self().parent()
-      .each([](flecs::entity e, space::Scale& scale, const space::BBox& parent_bbox){
-        //scale = parent_bbox;
+      .arg(3).self().second<space::Global>().parent()
+      .with<BBoxer>().self()
+      .iter([](flecs::iter it, space::Scale* scale, const space::BBox* parent_bbox, const space::Scale* parent_scale) {
+        for (auto i: it) {
+          scale[i] = parent_bbox[i];
+        }
       });
 
     world.system<Position, Rotation, Orbit>("Orbit")

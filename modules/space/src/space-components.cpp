@@ -29,5 +29,7 @@ namespace engine::space {
     world.component<BBox>()
       .member<decltype(BBox::x)>("x")
       .member<decltype(BBox::y)>("y");
+
+    world.component<IgnoreParentScale>();
   }
 }
