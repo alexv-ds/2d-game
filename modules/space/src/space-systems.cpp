@@ -37,8 +37,8 @@ namespace engine::space {
   static void UpdateScale(flecs::iter& it, const Scale* local, Scale* global, const Scale* parent) {
     if (parent) {
       for (auto i: it) {
-        global[i].x = local[i].x + parent[i].x;
-        global[i].y = local[i].y + parent[i].y;
+        global[i].x = local[i].x * parent[i].x;
+        global[i].y = local[i].y * parent[i].y;
       }
     } else {
       for (auto i: it) {
