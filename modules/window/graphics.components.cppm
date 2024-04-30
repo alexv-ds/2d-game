@@ -1,9 +1,45 @@
-#include <engine/graphics.hpp>
+module;
+#include <flecs.h>
+#include <SFML/Graphics.hpp>
 #include <engine/space.hpp>
-#include "graphics-components-private.hpp"
+export module engine.graphics:components;
+import :components.internal;
+
+export namespace engine::graphics {
+
+  struct Color {
+    float r = 1;// range [0, +inf]
+    float g = 1;
+    float b = 1;
+  };
+
+  struct Alpha {
+    float a = 1;// range [0,1]
+
+    inline Alpha() = default;
+    inline Alpha(float a) : a(a) {}// NOLINT(google-explicit-constructor)
+  };
+
+  struct Layer {
+    float z = 0;// range [-inf, +inf]
+
+    inline Layer() = default;
+    inline Layer(float z) : z(z) {}// NOLINT(google-explicit-constructor)
+  };
+
+  struct OnDraw {};
+
+  struct FixEqualLayerBlinking {};
+
+  // prefabs
+  namespace material {
+    struct BlendAlpha {};
+    struct BlendAdd {};
+    struct BlendMultiply {};
+  };// namespace material
+}// namespace engine::graphics
 
 namespace engine::graphics {
-
   template<class T>
   static flecs::entity create_material(flecs::world& world, sf::BlendMode blend_mode) {
     return world.prefab<T>()
@@ -22,7 +58,7 @@ namespace engine::graphics {
       .template override<FixEqualLayerBlinking>();
   }
 
-  void init_graphics_components(flecs::world& world) {
+  export void init_graphics_components(flecs::world& world) {
     world.component<Color>()
       .member<decltype(Color::r)>("r")
       .member<decltype(Color::g)>("g")

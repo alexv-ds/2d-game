@@ -3,6 +3,8 @@
 #include "window/event.hpp"
 #include "window/components.hpp"
 
+import engine.window;
+
 namespace engine {
 
   class Window {

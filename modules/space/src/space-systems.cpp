@@ -117,7 +117,7 @@ namespace engine::space {
       }
     } else {
       for (auto i: it) {
-        bbox[i] = {1.0f, 1.0f};
+        bbox[i] = BBox{1.0f, 1.0f};
       }
     }
 

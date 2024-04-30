@@ -7,13 +7,9 @@ add_library(engine-window
   include/engine/window/components.hpp
   include/engine/window/components-sfml.hpp
   src/window-components.cpp
-  include/engine/graphics.hpp
-  src/graphics.cpp
-  src/graphics-components.cpp
-  src/graphics-components-private.hpp
-  src/graphics-systems.cpp
-  include/engine/graphics/predefined-colors.hpp
-  include/engine/graphics/components.hpp
+#  src/graphics.cpp
+#  src/graphics-components.cpp
+#  src/graphics-systems.cpp
 )
 add_library(engine::window ALIAS engine-window)
 target_include_directories(engine-window PUBLIC include)
@@ -28,3 +24,12 @@ target_link_libraries(engine-window PUBLIC
   EASTL
 )
 target_link_libraries(engine-window PRIVATE spdlog::spdlog engine::space)
+
+target_sources(engine-window PUBLIC FILE_SET CXX_MODULES FILES
+  window.cppm
+  graphics.cppm
+  graphics.colors.cppm
+  graphics.systems.cppm
+  graphics.components.cppm
+  graphics.components.internal.cppm
+)
