@@ -25,6 +25,6 @@ CPMGetPackage(spdlog)
 target_link_libraries(engine-window PUBLIC
   sfml-graphics
   flecs::flecs_static
-  EASTL::EASTL
+  EASTL
 )
 target_link_libraries(engine-window PRIVATE spdlog::spdlog engine::space)
