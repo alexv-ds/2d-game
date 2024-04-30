@@ -12,4 +12,9 @@ namespace engine::space {
   void SpatialHash::update(const flecs::entity_t* entity, const Position* pos, const BBox* bbox) {
 
   }
+
+  void SpatialHash::on_delete(SpatialSharedHandle& handle) {
+
+  }
+
 } // engine::space
