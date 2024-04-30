@@ -1,13 +1,15 @@
+module;
 #include <type_traits>
 #include <random>
 #include <flecs.h>
 #include <EASTL/algorithm.h>
 #include <engine/window/components-sfml.hpp>
-#include <engine/graphics.hpp>
 #include <engine/space.hpp>
-#include "graphics-components-private.hpp"
+#include <EASTL/array.h>
 
-#include <spdlog/spdlog.h>
+module engine.graphics:systems;
+import :components;
+import :components.internal;
 
 namespace engine::graphics {
 
@@ -69,13 +71,13 @@ namespace engine::graphics {
         const sf::Color sf_color(
           static_cast<std::uint8_t>(
             eastl::clamp(static_cast<std::uint32_t>(color[i].r * 255), std::uint32_t{0}, std::uint32_t{255})
-          ),
+              ),
           static_cast<std::uint8_t>(
             eastl::clamp(static_cast<std::uint32_t>(color[i].g * 255), std::uint32_t{0}, std::uint32_t{255})
-          ),
+              ),
           static_cast<std::uint8_t>(
             eastl::clamp(static_cast<std::uint32_t>(color[i].b * 255), std::uint32_t{0}, std::uint32_t{255})
-          )
+              )
         );
 
         quad[i].vertexes[0].color = sf_color;
@@ -89,13 +91,13 @@ namespace engine::graphics {
       const sf::Color sf_color(
         static_cast<std::uint8_t>(
           eastl::clamp(static_cast<std::uint32_t>(color->r * 255), std::uint32_t{0}, std::uint32_t{255})
-        ),
+            ),
         static_cast<std::uint8_t>(
           eastl::clamp(static_cast<std::uint32_t>(color->g * 255), std::uint32_t{0}, std::uint32_t{255})
-        ),
+            ),
         static_cast<std::uint8_t>(
           eastl::clamp(static_cast<std::uint32_t>(color->b * 255), std::uint32_t{0}, std::uint32_t{255})
-        )
+            )
       );
 
       for (auto i: it) {
@@ -221,11 +223,11 @@ namespace engine::graphics {
     }
   }
 
-  void init_graphics_systems(flecs::world & world) {
+  export void init_graphics_systems(flecs::world & world) {
     [[maybe_unused]] auto _ = world.scope("systems");
 
     world.system<const Color, const Alpha, SFML_Quad, const space::Transform>(
-        "UpdateVertexesPositionColorAlpha_V2")
+           "UpdateVertexesPositionColorAlpha_V2")
       .instanced()
       .kind(flecs::PostUpdate)
       .arg(2).optional()

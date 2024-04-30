@@ -1,8 +1,14 @@
 #include <spdlog/spdlog.h>
+
+import engine.window;
+import engine.window;
+import engine.window;
+import engine.window;
+
 #include <engine/window.hpp>
 #include <engine/window/components-sfml.hpp>
+
 #include <engine/space.hpp>
-#include <engine/graphics.hpp>
 
 #include <cmath>
 #include <random>
@@ -10,6 +16,9 @@
 #include <glm/mat3x3.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <SFML/Graphics.hpp>
+
+import engine.graphics;
+import engine.graphics.colors;
 
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
@@ -42,6 +51,7 @@ int main() {
 
   world.import<engine::Window>();
   world.import<engine::Space>();
+//  import_graphics(world);
   world.import<engine::Graphics>();
 
   eastl::shared_ptr window = eastl::make_shared<sf::RenderWindow>(

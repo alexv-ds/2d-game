@@ -1,4 +1,5 @@
 #include <flecs.h>
+
 #include <engine/window/components.hpp>
 #include <engine/window/components-sfml.hpp>
 

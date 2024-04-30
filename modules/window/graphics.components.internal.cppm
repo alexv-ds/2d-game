@@ -1,10 +1,9 @@
-#pragma once
-
-#include <SFML/Graphics.hpp>
+module;
 #include <EASTL/array.h>
+#include <SFML/Graphics.hpp>
+export module engine.graphics:components.internal;
 
-namespace engine::graphics {
-
+export namespace engine::graphics {
   struct SFML_Quad {
     eastl::array<sf::Vertex, 6> vertexes = {};
   };
