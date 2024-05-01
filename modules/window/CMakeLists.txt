@@ -32,4 +32,5 @@ target_sources(engine-window PUBLIC FILE_SET CXX_MODULES FILES
   graphics/engine.graphics.systems.cppm
   graphics/engine.graphics.components.cppm
   graphics/engine.graphics.components_internal.cppm
+  graphics/engine.graphics.components_impl.cppm
 )

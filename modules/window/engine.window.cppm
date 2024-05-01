@@ -20,4 +20,4 @@ namespace engine {
 }
 
 //instantiate import template
-template flecs::entity flecs::world::import<engine::Window>();
+//template flecs::entity flecs::world::import<engine::Window>();

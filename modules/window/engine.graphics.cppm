@@ -10,6 +10,7 @@ export import :components;
 import engine.window;
 import engine.space;
 import :systems;
+import :components_impl;
 
 
 export namespace engine {
@@ -26,4 +27,4 @@ export namespace engine {
 }// namespace engine
 
 //instantiate import template
-template flecs::entity flecs::world::import<engine::Graphics>();
+//template flecs::entity flecs::world::import<engine::Graphics>();
