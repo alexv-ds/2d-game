@@ -1,7 +1,7 @@
 module;
 #include <EASTL/array.h>
 #include <SFML/Graphics.hpp>
-export module engine.graphics:components.internal;
+export module engine.graphics:components_internal;
 
 export namespace engine::graphics {
   struct SFML_Quad {

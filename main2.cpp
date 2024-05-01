@@ -1,13 +1,4 @@
 #include <spdlog/spdlog.h>
-
-import engine.window;
-import engine.window;
-import engine.window;
-import engine.window;
-
-#include <engine/window.hpp>
-#include <engine/window/components-sfml.hpp>
-
 #include <engine/space.hpp>
 
 #include <cmath>
@@ -16,9 +7,13 @@ import engine.window;
 #include <glm/mat3x3.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <SFML/Graphics.hpp>
+#include <EASTL/shared_ptr.h>
+#include <flecs.h>
 
 import engine.graphics;
 import engine.graphics.colors;
+import engine.window;
+import engine.window.sfml;
 
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
@@ -47,7 +42,7 @@ int main() {
 
 
 
-  //flecs::log::set_level(0);
+
 
   world.import<engine::Window>();
   world.import<engine::Space>();
@@ -58,29 +53,28 @@ int main() {
     sf::VideoMode::getDesktopMode(),
     "Window",
     sf::Style::Default
-//    sf::State::Fullscreen
   );
   world.set<engine::window::SFML_RenderWindow>(
     {
       .window = window
     }
   );
-
-
+//
+//
   {
     auto _ = world.scope("entities");
-
+//
     struct Orbit {
       float angular_speed = 2;
       float angle = 0;
       float radius = 1;
     };
-
+//
     world.component<Orbit>()
       .member<float>("angular_speed")
       .member<float>("angle")
       .member<float>("radius");
-
+//
     using namespace engine::space;
 
     auto prefab = world.prefab("prefab")
