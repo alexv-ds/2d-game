@@ -2,13 +2,13 @@ module;
 #include <flecs.h>
 #include <EASTL/array.h>
 #include <SFML/Graphics.hpp>
-#include <engine/space.hpp>
 //#include <engine/window/components-sfml.hpp>
 
 
 export module engine.graphics;
 export import :components;
 import engine.window;
+import engine.space;
 import :systems;
 
 

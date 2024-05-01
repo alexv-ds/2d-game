@@ -1,15 +1,15 @@
 module;
-#include "engine/space.hpp"
+#include <random>
+#include <type_traits>
 #include <EASTL/algorithm.h>
 #include <EASTL/array.h>
 #include <SFML/Graphics.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat3x3.hpp>
 #include <flecs.h>
-#include <random>
-#include <type_traits>
-
 module engine.graphics:systems;
-import :components;
 import engine.window.sfml;
+import engine.space;
 import :components;
 import :components_internal;
 

@@ -1,6 +1,4 @@
 #include <spdlog/spdlog.h>
-#include <engine/space.hpp>
-
 #include <cmath>
 #include <random>
 
@@ -14,6 +12,7 @@ import engine.graphics;
 import engine.graphics.colors;
 import engine.window;
 import engine.window.sfml;
+import engine.space;
 
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
@@ -59,22 +58,22 @@ int main() {
       .window = window
     }
   );
-//
-//
+
+
   {
     auto _ = world.scope("entities");
-//
+
     struct Orbit {
       float angular_speed = 2;
       float angle = 0;
       float radius = 1;
     };
-//
+
     world.component<Orbit>()
       .member<float>("angular_speed")
       .member<float>("angle")
       .member<float>("radius");
-//
+
     using namespace engine::space;
 
     auto prefab = world.prefab("prefab")
@@ -137,33 +136,33 @@ int main() {
         .set<engine::graphics::Color>(graphics::color::red);
     }
 
-    world.system<space::Scale, const space::BBox, const space::Scale>("SyncBbox")
-      .instanced()
-      .arg(1).self()
-      .arg(2).self().parent()
-      .arg(3).self().second<space::Global>().parent()
-      .with<BBoxer>().self()
-      .iter([](flecs::iter it, space::Scale* scale, const space::BBox* parent_bbox, const space::Scale* parent_scale) {
-        for (auto i: it) {
-          scale[i] = parent_bbox[i];
-        }
-      });
-
-    world.system<Position, Rotation, Orbit>("Orbit")
-      .iter([global_speed](flecs::iter it, Position* position, Rotation* rotation, Orbit* orbit) {
-        const float dt = it.delta_system_time() * global_speed;
-        for (auto i : it) {
-          orbit[i].angle += dt * orbit[i].angular_speed / std::pow(orbit[i].radius, 1.5f);
-
-          rotation[i].rad = orbit[i].angle + 3.1415f/2.0f;
-
-          position[i].x = orbit[i].radius * std::cos(orbit[i].angle);
-          position[i].y = orbit[i].radius * std::sin(orbit[i].angle);
-        }
-      });
+//    world.system<space::Scale, const space::BBox, const space::Scale>("SyncBbox");
+//      .instanced()
+//      .arg(1).self()
+//      .arg(2).self().parent()
+//      .arg(3).self().second<space::Global>().parent()
+//      .with<BBoxer>().self()
+//      .iter([](flecs::iter it, space::Scale* scale, const space::BBox* parent_bbox, const space::Scale* parent_scale) {
+//        for (auto i: it) {
+//          scale[i] = parent_bbox[i];
+//        }
+//      });
+//
+//    world.system<Position, Rotation, Orbit>("Orbit")
+//      .iter([global_speed](flecs::iter it, Position* position, Rotation* rotation, Orbit* orbit) {
+//        const float dt = it.delta_system_time() * global_speed;
+//        for (auto i : it) {
+//          orbit[i].angle += dt * orbit[i].angular_speed / std::pow(orbit[i].radius, 1.5f);
+//
+//          rotation[i].rad = orbit[i].angle + 3.1415f/2.0f;
+//
+//          position[i].x = orbit[i].radius * std::cos(orbit[i].angle);
+//          position[i].y = orbit[i].radius * std::sin(orbit[i].angle);
+//        }
+//      });
   }
 
-  window->setVerticalSyncEnabled(true);
+//  window->setVerticalSyncEnabled(true);
   return world.app()
     .enable_monitor(true)
     .enable_rest()

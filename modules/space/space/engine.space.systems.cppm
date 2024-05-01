@@ -1,11 +1,13 @@
+module;
 #include <type_traits>
 #include <cstring>
 #include <flecs.h>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <engine/space.hpp>
 
-#include <spdlog/spdlog.h>
+
+export module engine.space:systems;
+import :components;
 
 namespace engine::space {
   static void UpdatePosition(flecs::iter& it, const Position* local, Position* global, const Position* parent) {
@@ -87,7 +89,7 @@ namespace engine::space {
     // endregion
   }
 
-//Описывает неповернутый прямоугольник вокруг повернутого прямоугольника
+  //Описывает не повернутый прямоугольник вокруг повернутого прямоугольника
   inline glm::vec2 describe_rectangle(glm::vec2 size, float angle) {
     float abs_sin_angle = glm::abs(glm::sin(angle));
     float abs_cos_angle = glm::abs(glm::cos(angle));
@@ -98,9 +100,9 @@ namespace engine::space {
   }
 
   static void UpdateBBox(flecs::iter& it,
-                  BBox* bbox /* self */,
-                  const Scale* scale /* instanced, optional */,
-                  const Rotation* rotation /* instanced, optional */) {
+                         BBox* bbox /* self */,
+                         const Scale* scale /* instanced, optional */,
+                         const Rotation* rotation /* instanced, optional */) {
 
     if (scale) {
       if (it.is_self(2)) {
@@ -145,7 +147,7 @@ namespace engine::space {
 
   }
 
-  void init_space_systems(flecs::world & world) {
+  export void init_space_systems(flecs::world & world) {
     [[maybe_unused]] auto _ = world.scope("systems");
 
     // Position
@@ -220,10 +222,10 @@ namespace engine::space {
 
 
     world.system<
-        Transform,
-        const space::Position,
-        const space::Rotation,
-        const space::Scale>("UpdateTransform")
+           Transform,
+           const space::Position,
+           const space::Rotation,
+           const space::Scale>("UpdateTransform")
       .instanced()
       .kind(flecs::PostUpdate)
       .arg(1).self()
@@ -234,10 +236,10 @@ namespace engine::space {
       .iter(UpdateTransform);
 
     world.system<
-        Transform,
-        const space::Position,
-        const space::Rotation,
-        const space::Scale>("UpdateTransformStatic")
+           Transform,
+           const space::Position,
+           const space::Rotation,
+           const space::Scale>("UpdateTransformStatic")
       .instanced()
       .kind(flecs::PostUpdate)
       .arg(1).self()

@@ -1,9 +1,9 @@
 module;
-#include "engine/space.hpp"
 #include <SFML/Graphics.hpp>
 #include <flecs.h>
 export module engine.graphics:components;
 import :components_internal;
+import engine.space;
 
 export namespace engine::graphics {
 
