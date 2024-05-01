@@ -162,7 +162,7 @@ int main() {
       });
   }
 
-//  window->setVerticalSyncEnabled(true);
+  window->setVerticalSyncEnabled(true);
   return world.app()
     .enable_monitor(true)
     .enable_rest()
