@@ -66,9 +66,6 @@ CPMAddPackage(
 add_subdirectory(modules/space)
 add_subdirectory(modules/window)
 
-add_executable(main_1 main.cpp)
-target_link_libraries(main_1 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
-
 add_executable(main_3 main3.cpp)
 target_link_libraries(main_3 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
 

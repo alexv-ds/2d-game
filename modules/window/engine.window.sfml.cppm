@@ -1,8 +1,10 @@
-#pragma once
+module;
 #include <SFML/Graphics.hpp>
 #include <EASTL/shared_ptr.h>
+export module engine.window.sfml;
 
-namespace engine::window {
+
+export namespace engine::window {
 
   struct SFML_RenderWindow {
     eastl::shared_ptr<sf::RenderWindow> window;

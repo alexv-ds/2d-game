@@ -1,16 +1,17 @@
+module;
 #include <flecs.h>
-
-#include <engine/window/components.hpp>
-#include <engine/window/components-sfml.hpp>
+export module engine.window:components_impl;
+import :components;
+import engine.window.sfml;
 
 namespace engine::window {
-  void init_window_components(flecs::world& world) {
+  export void init_window_components(flecs::world& world) {
     world.component<Opened>();
     world.component<Focused>();
     world.component<SFML_RenderWindow>();
   }
 
-  void init_window_phases(flecs::world& world) {
+  export void init_window_phases(flecs::world& world) {
     [[maybe_unused]] auto _ = world.scope("phases");
 
     world.entity<phases::EventPollPre>()
