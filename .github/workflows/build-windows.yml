@@ -41,6 +41,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: main_2-windows
-          path: "${{ env.BUILD_DIR }}/main_2"
+          path: "${{ env.BUILD_DIR }}/Release/main_2.exe"
           if-no-files-found: error
           compression-level: 9
