@@ -1,0 +1,56 @@
+name: "Build Ubuntu"
+on: [push, pull_request]
+
+env:
+  CPM_SOURCE_CACHE: "cpm-cache"
+  BUILD_DIR: "build"
+  DEBIAN_FRONTEND: noninteractive
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      -
+        uses: actions/checkout@v4
+      -
+        name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        with:
+          version: 1.12.0
+      -
+        name: Setup Build Dependencies
+        run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
+          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && \
+          sudo apt-get update && \
+          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev clang-tools-18 upx-ucl
+      -
+        uses: actions/cache@v4
+        with:
+          key: cpm-cache-${{ hashFiles('cmake/cpm-dependencies.cmake') }}
+          path: ${{ env.CPM_SOURCE_CACHE }}
+          enableCrossOsArchive: true
+      -
+        name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.29.x'
+      -
+        name: Configure project
+        run: cmake -B ${{ env.BUILD_DIR }} -G Ninja -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18 -DCMAKE_BUILD_TYPE=Release
+      -
+        name: Build project
+        run: cmake --build ${{ env.BUILD_DIR }} --parallel
+      -
+        name: Compress executable
+        run: upx-ucl --lzma -9 "${{ env.BUILD_DIR }}/main_2"
+      -
+        name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: main_2-linux
+          path: "${{ env.BUILD_DIR }}/main_2"
+          if-no-files-found: error
+          compression-level: 9

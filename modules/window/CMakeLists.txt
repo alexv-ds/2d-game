@@ -1,17 +1,7 @@
 
-add_library(engine-window
-#  include/engine/window.hpp
-#  src/window.cpp
-#  src/graphics.cpp
-#  src/graphics-components.cpp
-#  src/graphics-systems.cpp
-)
+add_library(engine-window)
 add_library(engine::window ALIAS engine-window)
 target_include_directories(engine-window PUBLIC include)
-
-CPMGetPackage(SFML)
-CPMGetPackage(flecs)
-CPMGetPackage(spdlog)
 
 target_link_libraries(engine-window PUBLIC
   sfml-graphics
