@@ -65,9 +65,18 @@ CPMAddPackage(
 
 add_subdirectory(modules/space)
 add_subdirectory(modules/window)
+add_subdirectory(modules/spatial)
+
 
 add_executable(main_3 main3.cpp)
-target_link_libraries(main_3 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
+target_link_libraries(main_3 PRIVATE
+  engine::window
+  engine::space
+  engine::spatial
+  spdlog::spdlog
+  chipmunk_static
+  glm::glm
+)
 
 add_executable(main_2 main2.cpp
   tmp_stuff/StupidSpatial.cpp

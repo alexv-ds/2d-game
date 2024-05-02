@@ -1,11 +1,15 @@
 #include <spdlog/spdlog.h>
-#include <glm/vec2.hpp>
-#include <glm/geometric.hpp>
 
 #include <cmath>
-#include <random>
-#include <cstring>
 #include <bit>
+#include <flecs.h>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+
+import engine.space;
+
+using namespace engine;
 
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
@@ -22,12 +26,37 @@ void* operator new[](size_t size,
   return new std::byte[size];
 }
 
-
 inline std::uint64_t hash(const std::int32_t x, const std::int32_t y) {
   const auto u64_x = static_cast<std::uint64_t>(std::bit_cast<std::uint32_t>(x));
   const auto u64_y = static_cast<std::uint64_t>(std::bit_cast<std::uint32_t>(y));
   return (u64_x << 32) | u64_y;
 }
+
+class SpatialHash;
+
+class SpatialSharedData {
+  friend class SpatialHash;
+
+  space::BBox bbox_cache = {};
+  space::Position position_cache = {};
+  flecs::entity_t entity = 0;
+};
+
+class SpatialHash : std::enable_shared_from_this<SpatialHash> {
+public:
+  std::shared_ptr<SpatialSharedData> create_shared_data(const space::BBox& bbox,
+                                                        const space::Position& position,
+                                                        const flecs::entity_t entity) {
+
+  }
+
+private:
+//  using CellT = std::vector
+
+
+
+
+};
 
 int main() {
 #ifdef SPDLOG_ACTIVE_LEVEL
