@@ -24,14 +24,14 @@ jobs:
         run: |
           wget "https://apt.llvm.org/llvm-snapshot.gpg.key" && \
           gpg -o llvm-snapshot.gpg --dearmor llvm-snapshot.gpg.key && rm llvm-snapshot.gpg.key && \
-          mv llvm-snapshot.gpg /usr/share/keyrings/llvm-snapshot.gpg && \
-          add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
+          sudo mv llvm-snapshot.gpg /usr/share/keyrings/llvm-snapshot.gpg && \
+          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
       -
         name: Update APT Cache
-        run: apt-get update
+        run: sudo apt-get update
       -
         name: Install CLANG-18
-        run: apt-get install clang-18
+        run: sudo apt-get install clang-18
       -
         uses: actions/cache@v4
         with:
