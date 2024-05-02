@@ -20,16 +20,12 @@ jobs:
         with:
           version: 1.12.0
       -
-        name: Setup LLVM-18 apt repo
+        name: Setup Build Dependencies
         run: |
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
-          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
-      -
-        name: Update APT Cache
-        run: sudo apt-get update
-      -
-        name: Install CLANG-18
-        run: sudo apt-get install clang-18
+          sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && \
+          sudo apt-get update && \
+          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev
       -
         uses: actions/cache@v4
         with:
