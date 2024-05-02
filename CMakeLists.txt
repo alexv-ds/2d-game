@@ -49,20 +49,6 @@ CPMAddPackage(
   URL_HASH "SHA3_256=9384d631dd1fdbf0e48b57c5f1f6868fe3a6da30c3c910a9bfce338a8af683dc"
 )
 
-CPMAddPackage(
-  GITHUB_REPOSITORY slembcke/Chipmunk2D
-  GIT_TAG d0239ef4599b3688a5a336373f7d0a68426414ba
-  GIT_SHALLOW
-  OPTIONS
-  "BUILD_DEMOS OFF"
-  "INSTALL_DEMOS OFF"
-  "BUILD_SHARED OFF"
-  "BUILD_STATIC ON"
-  "INSTALL_STATIC OFF"
-  "LIB_INSTALL_DIR \"\""
-  "BIN_INSTALL_DIR \"\""
-)
-
 add_subdirectory(modules/space)
 add_subdirectory(modules/window)
 add_subdirectory(modules/spatial)
@@ -74,11 +60,8 @@ target_link_libraries(main_3 PRIVATE
   engine::space
   engine::spatial
   spdlog::spdlog
-  chipmunk_static
   glm::glm
 )
 
-add_executable(main_2 main2.cpp
-  tmp_stuff/StupidSpatial.cpp
-  tmp_stuff/StupidSpatial.hpp)
-target_link_libraries(main_2 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
+add_executable(main_2 main2.cpp)
+target_link_libraries(main_2 engine::window engine::space spdlog::spdlog glm::glm)
