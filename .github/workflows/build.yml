@@ -25,7 +25,7 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
           sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && \
           sudo apt-get update && \
-          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev clang-tools-18
+          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev clang-tools-18 upx-ucl
       -
         uses: actions/cache@v4
         with:
@@ -44,10 +44,13 @@ jobs:
         name: Build project
         run: cmake --build ${{ env.BUILD_DIR }} --parallel
       -
+        name: Compress executable
+        run: upx-ucl --lzma -9 "${{ env.BUILD_DIR }}/main_2"
+      -
         name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: main_2
+          name: main_2-linux
           path: "${{ env.BUILD_DIR }}/main_2"
           if-no-files-found: error
           compression-level: 9
