@@ -7,7 +7,7 @@ module;
 #include <glm/vec3.hpp>
 #include <glm/mat3x3.hpp>
 #include <flecs.h>
-module engine.graphics:systems;
+export module engine.graphics:systems;
 import engine.window.sfml;
 import engine.space;
 import :components;

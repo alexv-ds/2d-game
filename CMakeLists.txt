@@ -26,18 +26,18 @@ CPMUsePackageLock(package-lock.cmake)
 
 CPMAddPackage(
   NAME EABase 
-  VERSION 2.09.05
-  URL "https://github.com/electronicarts/EABase/archive/refs/tags/2.09.05.tar.gz"
-  URL_HASH "SHA3_256=6b4d6aabe4a5c08eec09c5b0196582f4fb289dcbc108498eedb00460656c83c0"
+#  VERSION 2.09.05
+  URL "https://github.com/electronicarts/EABase/archive/521cb053d9320636f53226ffc616216cf532f0ef.tar.gz"
+  URL_HASH "SHA3_256=e508facd55e1d94c640a20cd2fa5b59e2e6226de2e6ee4a754a3877637a49801"
   SYSTEM YES
   EXCLUDE_FROM_ALL YES
 )
 
 CPMAddPackage(
   NAME EASTL
-  VERSION 3.21.12
-  URL "https://github.com/electronicarts/EASTL/archive/refs/tags/3.21.12.tar.gz"
-  URL_HASH "SHA3_256=72900db956415acc1e7007defcc1e9c4c0dfbee78be38ce667a1113f602532ea"
+#  VERSION 3.21.12
+  URL "https://github.com/electronicarts/EASTL/archive/05f4b4aef33f2f3ded08f19fa97f5a27ff35ff9f.tar.gz"
+  URL_HASH "SHA3_256=214a22bbc62fe6102a5f5ef119d151eb9caaeb3b1fe9a0b30197e13fbbc04387"
   SYSTEM YES
   EXCLUDE_FROM_ALL YES
 )

@@ -48,7 +48,7 @@ int main() {
 //  import_graphics(world);
   world.import<engine::Graphics>();
 
-  eastl::shared_ptr window = eastl::make_shared<sf::RenderWindow>(
+  auto window = std::make_shared<sf::RenderWindow>(
     sf::VideoMode::getDesktopMode(),
     "Window",
     sf::Style::Default
