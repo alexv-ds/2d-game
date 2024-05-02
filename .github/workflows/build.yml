@@ -25,7 +25,7 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
           sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && \
           sudo apt-get update && \
-          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev
+          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev libgl1-mesa-dev
       -
         uses: actions/cache@v4
         with:
