@@ -25,7 +25,7 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
           sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && \
           sudo apt-get update && \
-          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev libgl1-mesa-dev
+          sudo apt-get install clang-18 libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev
       -
         uses: actions/cache@v4
         with:
@@ -33,8 +33,18 @@ jobs:
           path: ${{ env.CPM_SOURCE_CACHE }}
           enableCrossOsArchive: true
       -
+        name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.29.x'
+      -
         name: Configure project
-        run: cmake -B ${{ env.BUILD_DIR }} -G Ninja -DCMAKE_BUILD_TYPE=Release
+        run: cmake \
+          -B ${{ env.BUILD_DIR }} \
+          -G Ninja \ 
+          -DCMAKE_C_COMPILER=clang-18 \
+          -DCMAKE_CXX_COMPILER=clang++-18 \
+          -DCMAKE_BUILD_TYPE=Release
       -
         name: Build project
         run: cmake --build ${{ env.BUILD_DIR }} --parallel
