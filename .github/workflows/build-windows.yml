@@ -1,0 +1,53 @@
+name: "Build Windows"
+on: [push, pull_request]
+
+env:
+  CPM_SOURCE_CACHE: "cpm-cache"
+  BUILD_DIR: "build"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      -
+        uses: actions/checkout@v4
+      -
+        name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        with:
+          version: 1.12.0
+      -
+        uses: actions/cache@v4
+        with:
+          key: cpm-cache-${{ hashFiles('cmake/cpm-dependencies.cmake') }}
+          path: ${{ env.CPM_SOURCE_CACHE }}
+          enableCrossOsArchive: true
+      -
+        name: Install UPX
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install upx
+      -
+        name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.29.x'
+      -
+        name: Configure project
+        run: cmake -B ${{ env.BUILD_DIR }} -G Ninja
+      -
+        name: Build project
+        run: cmake --build ${{ env.BUILD_DIR }} --config=Release --parallel
+      -
+        name: Compress executable
+        run: upx-ucl --lzma -9 "${{ env.BUILD_DIR }}/main_2.exe"
+      -
+        name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: main_2-windows
+          path: "${{ env.BUILD_DIR }}/main_2"
+          if-no-files-found: error
+          compression-level: 9
