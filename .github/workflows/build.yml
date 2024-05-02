@@ -39,13 +39,7 @@ jobs:
           cmake-version: '3.29.x'
       -
         name: Configure project
-        run: |
-          cmake \
-            -B ${{ env.BUILD_DIR }} \
-            -G Ninja \ 
-            -DCMAKE_C_COMPILER=clang-18 \
-            -DCMAKE_CXX_COMPILER=clang++-18 \
-            -DCMAKE_BUILD_TYPE=Release
+        run: cmake -B ${{ env.BUILD_DIR }} -G Ninja -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18 -DCMAKE_BUILD_TYPE=Release
       -
         name: Build project
         run: cmake --build ${{ env.BUILD_DIR }} --parallel
