@@ -35,7 +35,7 @@ jobs:
         run: cmake --build ${{ env.BUILD_DIR }} --config=Release --parallel
       -
         name: Compress executable
-        run: upx --lzma -9 "${{ env.BUILD_DIR }}/main_2.exe"
+        run: upx --lzma -9 "${{ env.BUILD_DIR }}/Release/main_2.exe"
       -
         name: Upload artifacts
         uses: actions/upload-artifact@v4
