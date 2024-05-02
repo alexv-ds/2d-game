@@ -1,15 +1,14 @@
-#pragma once
-#include <EASTL/fixed_list.h>
+export module engine.window:components;
 
-namespace engine {
+export namespace engine {
 
   namespace window {
     struct Opened {};
     struct Focused {};
-  } // namespace window
+  }// namespace window
 
   namespace window::phases {
     struct EventPollPre {};
     struct EventPoll {};
-  } // namespace phases
-}
+  }// namespace window::phases
+}// namespace engine

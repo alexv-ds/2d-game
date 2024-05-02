@@ -8,8 +8,8 @@ if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds not allowed")
 endif()
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED 20)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_compile_definitions(
@@ -65,9 +65,6 @@ CPMAddPackage(
 
 add_subdirectory(modules/space)
 add_subdirectory(modules/window)
-
-add_executable(main_1 main.cpp)
-target_link_libraries(main_1 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)
 
 add_executable(main_3 main3.cpp)
 target_link_libraries(main_3 engine::window engine::space spdlog::spdlog chipmunk_static glm::glm)

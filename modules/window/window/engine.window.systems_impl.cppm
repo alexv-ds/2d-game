@@ -1,7 +1,10 @@
+module;
 #include <flecs.h>
 #include <spdlog/spdlog.h>
-#include <engine/window/components.hpp>
-#include <engine/window/components-sfml.hpp>
+#include <SFML/Graphics.hpp>
+export module engine.window:systems_impl;
+import :components;
+import engine.window.sfml;
 
 namespace engine::window {
 
@@ -64,7 +67,7 @@ namespace engine::window {
 
     world.system<SFML_RenderWindow>("SFML_Clear")
       .kind<phases::SFML_WindowClear>()
-//      .kind(flecs::PreStore)
+      //      .kind(flecs::PreStore)
       .arg(1).singleton()
       .iter(SFML_Clear);
 

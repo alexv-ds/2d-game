@@ -1,8 +1,12 @@
-#include <type_traits>
-#include <engine/space.hpp>
+module;
+#include <flecs.h>
+#include <glm/vec2.hpp>
+
+export module engine.space:components_impl;
+import :components;
 
 namespace engine::space {
-  void init_space_components(flecs::world& world) {
+  export void init_space_components(flecs::world& world) {
 
     static_assert(sizeof(Position) == sizeof(glm::vec2));
     world.component<Position>()
