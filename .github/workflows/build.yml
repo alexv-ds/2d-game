@@ -22,9 +22,6 @@ jobs:
       -
         name: Setup LLVM-18 apt repo
         run: |
-#          wget "https://apt.llvm.org/llvm-snapshot.gpg.key" && \
-#          gpg -o llvm-snapshot.gpg --dearmor llvm-snapshot.gpg.key && rm llvm-snapshot.gpg.key && \
-#          sudo mv llvm-snapshot.gpg /usr/share/keyrings/llvm-snapshot.gpg && \
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
           sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
       -
