@@ -11,4 +11,5 @@ target_link_libraries(engine-spatial PRIVATE spdlog::spdlog engine::space)
 target_sources(engine-spatial PUBLIC FILE_SET CXX_MODULES FILES
   engine.spatial.cppm
   spatial/engine.spatial.components.cppm
+  spatial/engine.spatial.xy_iterator.cppm
 )
