@@ -1,8 +1,4 @@
 #include <spdlog/spdlog.h>
-#include <engine/window.hpp>
-#include <engine/window/components-sfml.hpp>
-#include <engine/space.hpp>
-#include <engine/graphics.hpp>
 #include <glm/vec2.hpp>
 #include <glm/geometric.hpp>
 
@@ -10,8 +6,6 @@
 #include <random>
 #include <cstring>
 #include <bit>
-
-using namespace engine;
 
 void* operator new[](size_t size, const char* name, int, unsigned, const char* name2, int) {
   return new std::byte[size];
