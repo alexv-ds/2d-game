@@ -1,0 +1,42 @@
+name: "Build Ubuntu"
+on: [push, pull_request]
+
+env:
+  CPM_SOURCE_CACHE: "cpm-cache"
+  BUILD_DIR: "build"
+  DEBIAN_FRONTEND: noninteractive
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      -
+        uses: actions/checkout@v4
+      -
+        name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1
+        with:
+          version: 1.12.0
+      -
+        name: Setup LLVM-18 apt repo
+        run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+          add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' \
+      -
+        name: Update APT Cache
+        run: apt-get update
+      -
+        name: Install CLANG-18
+        run: apt-get install clang-18
+      -
+        uses: actions/cache@v4
+        with:
+          key: cpm-cache-${{ hashFiles('cmake/cpm-dependencies.cmake') }}
+          path: ${{ env.CPM_SOURCE_CACHE }}
+          enableCrossOsArchive: true
+      -
+        name: Configure project
+        run: cmake -B ${{ env.BUILD_DIR }} -G Ninja -DCMAKE_BUILD_TYPE=Release
+      -
+        name: Build project
+        run: cmake --build ${{ env.BUILD_DIR }} --parallel
