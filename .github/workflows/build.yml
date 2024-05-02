@@ -43,3 +43,11 @@ jobs:
       -
         name: Build project
         run: cmake --build ${{ env.BUILD_DIR }} --parallel
+      -
+        name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: main_2
+          path: "${{ env.BUILD_DIR }}/main_2"
+          if-no-files-found: error
+          compression-level: 9
