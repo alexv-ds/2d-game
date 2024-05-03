@@ -12,6 +12,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(ENGINE_BUILD_TESTING OFF CACHE BOOL "Build Engine Tests")
+
+if (ENGINE_BUILD_TESTING)
+  include(CTest)
+endif ()
+
 add_compile_definitions(
   SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE
   EASTL_DEBUGPARAMS_LEVEL=2
@@ -21,6 +27,10 @@ add_compile_definitions(
 
 include(cmake/get_cpm.cmake)
 include(cmake/cpm-dependencies.cmake)
+
+if (ENGINE_BUILD_TESTING)
+  include(Catch)
+endif ()
 
 add_subdirectory(modules/space)
 add_subdirectory(modules/window)

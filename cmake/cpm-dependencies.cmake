@@ -39,8 +39,8 @@ CPMAddPackage(
 
 CPMAddPackage(
   NAME flecs
-  URL "https://github.com/alexv-ds/flecs/archive/ea6dc1ae19124e8acc8c49686155ce8f7200e79c.tar.gz"
-  URL_HASH "SHA3_256=70da5684dc83e6c3da20c37f9fa2734dd427ce0a952c502c84d922514eb25669"
+  URL "https://github.com/alexv-ds/flecs/archive/964bd3fbe62fcbe4ae1a7e520f3e5c811d5a1a4a.tar.gz"
+  URL_HASH "SHA3_256=cefa0c9264cd80ea8fa58ca53d452212faa366c42b171e81b1deac268b66f172"
   SYSTEM YES
   EXCLUDE_FROM_ALL YES
   OPTIONS
@@ -58,3 +58,16 @@ CPMAddPackage(
   "SPDLOG_ENABLE_PCH ON"
   "SPDLOG_USE_STD_FORMAT ON"
 )
+
+if (BUILD_TESTING)
+  CPMAddPackage(
+    NAME Catch2
+    URL "https://github.com/catchorg/Catch2/archive/refs/tags/v3.5.4.tar.gz"
+    URL_HASH "SHA3_256=6908501ace10bca5ece01a972e4834777f3b3cb5e14b391cec015caeb5470eff"
+    OPTIONS
+    "CATCH_INSTALL_DOCS OFF"
+    "CATCH_INSTALL_EXTRAS OFF"
+    "CATCH_ENABLE_REPRODUCIBLE_BUILD OFF"
+  )
+  list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
+endif ()

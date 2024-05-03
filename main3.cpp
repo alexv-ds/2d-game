@@ -31,7 +31,6 @@ inline std::uint64_t hash(const std::int32_t x, const std::int32_t y) {
   const auto u64_y = static_cast<std::uint64_t>(std::bit_cast<std::uint32_t>(y));
   return (u64_x << 32) | u64_y;
 }
-
 class SpatialHash;
 
 class SpatialSharedData {
