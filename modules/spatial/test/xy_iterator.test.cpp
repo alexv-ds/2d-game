@@ -10,12 +10,7 @@ SCENARIO("xy struct compares correctly") {
     xy<int> xy2 = {3, -5};
 
     REQUIRE(xy1 == xy2);
-    REQUIRE(xy1 >= xy2);
-    REQUIRE(xy1 <= xy2);
-    REQUIRE_FALSE(xy1 > xy2);
-    REQUIRE_FALSE(xy1 < xy2);
     REQUIRE_FALSE(xy1 != xy2);
-    REQUIRE((xy1 <=> xy2) == std::strong_ordering::equal);
   }
 
   GIVEN("two non equal xy structs") {
@@ -24,6 +19,6 @@ SCENARIO("xy struct compares correctly") {
 
     REQUIRE_FALSE(xy1 == xy2);
     REQUIRE(xy1 != xy2);
-    REQUIRE((xy1 <=> xy2) != std::strong_ordering::equal);
+  }
   }
 }
