@@ -16,6 +16,7 @@ set(ENGINE_BUILD_TESTING OFF CACHE BOOL "Build Engine Tests")
 
 if (ENGINE_BUILD_TESTING)
   include(CTest)
+  enable_testing()
 endif ()
 
 add_compile_definitions(
@@ -47,3 +48,5 @@ target_link_libraries(main_3 PRIVATE
 
 add_executable(main_2 main2.cpp)
 target_link_libraries(main_2 engine::window engine::space spdlog::spdlog glm::glm)
+
+
