@@ -11,5 +11,13 @@ target_link_libraries(engine-spatial PRIVATE spdlog::spdlog engine::space)
 target_sources(engine-spatial PUBLIC FILE_SET CXX_MODULES FILES
   engine.spatial.cppm
   spatial/engine.spatial.components.cppm
-  spatial/engine.spatial.xy_iterator.cppm
+  engine.spatial.xy_iterator.cppm
 )
+
+if (BUILD_TESTING)
+  add_executable(test-engine-spatial
+    test/xy_iterator.test.cpp
+  )
+  target_link_libraries(test-engine-spatial PRIVATE Catch2::Catch2WithMain engine::spatial)
+  catch_discover_tests(test-engine-spatial)
+endif ()

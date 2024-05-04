@@ -4,9 +4,9 @@ module;
 #include <iterator>
 export module engine.spatial.xy_iterator;
 
-namespace engine::spatial {
+export namespace engine::spatial {
 
-  export template<std::signed_integral T>
+  template<std::signed_integral T>
   struct xy {
     T x;
     T y;
@@ -14,7 +14,7 @@ namespace engine::spatial {
     inline auto operator<=>(const xy&) const noexcept = default;
   };
 
-  export template<std::signed_integral T>
+  template<std::signed_integral T>
   class xy_iterator {
   public:
 //    using difference_type = std::ptrdiff_t;
