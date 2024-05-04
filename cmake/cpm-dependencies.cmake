@@ -39,8 +39,8 @@ CPMAddPackage(
 
 CPMAddPackage(
   NAME flecs
-  URL "https://github.com/alexv-ds/flecs/archive/964bd3fbe62fcbe4ae1a7e520f3e5c811d5a1a4a.tar.gz"
-  URL_HASH "SHA3_256=cefa0c9264cd80ea8fa58ca53d452212faa366c42b171e81b1deac268b66f172"
+  URL "https://github.com/SanderMertens/flecs/archive/5b65eb378eda9330d530b1a3f4de556f0819c0b2.tar.gz"
+  URL_HASH "SHA3_256=2d81c326084d66bbb07a24421b0b28602afdf2106e7bd34cb8fdf061174e2d98"
   SYSTEM YES
   EXCLUDE_FROM_ALL YES
   OPTIONS
