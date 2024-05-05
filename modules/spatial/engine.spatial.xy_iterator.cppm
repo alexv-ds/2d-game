@@ -25,7 +25,7 @@ export namespace engine::spatial {
     inline xy_iterator() noexcept = default;
 
     inline xy_iterator(xy<T> from, xy<T> to)
-        : xy_current(from), xy_end({.x = to.x + 1, .y = to.y}), y_begin(from.y) {}
+        : xy_current(from), xy_end({.x = to.x, .y = to.y}), y_begin(from.y) {}
 
     inline reference operator*() const noexcept {
       return this->xy_current;
@@ -46,17 +46,6 @@ export namespace engine::spatial {
       return tmp;
     }
 
-    inline xy_iterator& operator--() noexcept {
-      move_prev();
-      return *this;
-    }
-
-    inline xy_iterator operator--(int) noexcept {
-      xy_iterator<T> tmp = *this;
-      move_prev();
-      return tmp;
-    }
-
     inline bool operator==(const xy_iterator<T> other) const noexcept {
       return this->xy_current == other.xy_current;
     }
@@ -72,6 +61,7 @@ export namespace engine::spatial {
     inline xy_iterator<T> end() const noexcept {// NOLINT(*-use-nodiscard)
       xy_iterator<T> end = *this;
       end.xy_current = end.xy_end;
+      end.move_next();
       return end;
     }
 
@@ -84,13 +74,12 @@ export namespace engine::spatial {
 
     void move_next() noexcept {
       this->xy_current.y += this->xy_increment.y;
-//      if (this->xy_current.y > this->xy_end.y) {
-//        ++this->xy_current.x;
-//
-//      }
+      if (this->xy_current.y == this->xy_end.y + this->xy_increment.y) {
+        ++this->xy_current.x;
+        this->xy_current.y = this->y_begin;
+      }
     }
-    void move_prev() noexcept {}
   };
 
-  static_assert(std::bidirectional_iterator<xy_iterator<int>>);
+  static_assert(std::forward_iterator<xy_iterator<int>>);
 }// namespace engine::spatial
