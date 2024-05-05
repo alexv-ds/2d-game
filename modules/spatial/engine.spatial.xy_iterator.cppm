@@ -65,7 +65,7 @@ export namespace engine::spatial {
       return this->xy_current != other.xy_current;
     }
 
-    inline xy_iterator<T>& begin() const noexcept {// NOLINT(*-use-nodiscard)
+    inline xy_iterator<T>& begin() noexcept {// NOLINT(*-use-nodiscard)
       return *this;
     }
 
