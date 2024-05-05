@@ -19,8 +19,8 @@ export namespace engine::spatial {
   public:
     using difference_type = std::ptrdiff_t;
     using value_type = xy<T>;
-    using pointer = value_type*;
-    using reference = value_type&;
+    using pointer = const value_type*;
+    using reference = const value_type&;
 
     inline xy_iterator() noexcept = default;
 

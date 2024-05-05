@@ -20,5 +20,4 @@ SCENARIO("xy struct compares correctly") {
     REQUIRE_FALSE(xy1 == xy2);
     REQUIRE(xy1 != xy2);
   }
-  }
 }
