@@ -1,7 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
-#include <compare>
 #include <vector>
-#include <ranges>
+#include <algorithm>
 import engine.spatial.xy_iterator;
 
 using namespace engine::spatial;

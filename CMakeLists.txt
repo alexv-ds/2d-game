@@ -13,10 +13,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(ENGINE_BUILD_TESTING OFF CACHE BOOL "Build Engine Tests")
+set(ENGINE_CPACK OFF CACHE BOOL "Use cpack")
 
 if (ENGINE_BUILD_TESTING)
   include(CTest)
   enable_testing()
+endif ()
+
+if (ENGINE_CPACK)
+  include(cmake/project-cpack.cmake)
+  include(CPack)
 endif ()
 
 add_compile_definitions(
@@ -48,5 +54,4 @@ target_link_libraries(main_3 PRIVATE
 
 add_executable(main_2 main2.cpp)
 target_link_libraries(main_2 engine::window engine::space spdlog::spdlog glm::glm)
-
 

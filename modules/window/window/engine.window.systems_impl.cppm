@@ -35,8 +35,7 @@ namespace engine::window {
       return;
     }
 
-    sf::Event event;
-    while(window->window->pollEvent(event)) {
+    while(sf::Event event = window->window->pollEvent()) {
       if (event.is<sf::Event::Closed>()) {
         window->window->close();
       }
