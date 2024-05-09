@@ -26,8 +26,8 @@ CPMAddPackage(
 
 CPMAddPackage(
   NAME SFML
-  URL "https://github.com/SFML/SFML/archive/b1e309204afafd5ad5baaa06120314ef369ff5ba.tar.gz"
-  URL_HASH "SHA3_256=8c2d1d569ef17c2e108c3ea5f6963ce2ff9d3976f3ce8e1edacc2590bb4da7cd"
+  URL "https://github.com/SFML/SFML/archive/b79d5553fd9dd174deab7d6f4f05fe7e16178eab.tar.gz"
+  URL_HASH "SHA3_256=f2e7e9e1d004a4663eb30fdadca6b4e58e6e5380495d348b48d035e6401ea7f4"
   SYSTEM YES
   EXCLUDE_FROM_ALL YES
   OPTIONS
