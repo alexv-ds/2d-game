@@ -32,7 +32,7 @@ namespace engine::graphics {
                                                   const Alpha* alpha /* instanced, optional */,
                                                   SFML_Quad* quad /* self */,
                                                   const space::Transform* transform /* self */) {
-    static_assert(decltype(SFML_Quad::vertexes)::count == 6);
+    static_assert(eastl::tuple_size_v<decltype(quad->vertexes)> == 6);
 
     for (auto i : it) {
       quad[i].vertexes[0] = {
@@ -162,7 +162,7 @@ namespace engine::graphics {
                    const SFML_Quad* quad /* self */,
                    const SFML_RenderStates* states /* instanced */,
                    const Layer* /* instanced */) {
-    constexpr std::size_t quad_vert_count = decltype(SFML_Quad::vertexes)::count;
+    constexpr std::size_t quad_vert_count = eastl::tuple_size_v<decltype(quad->vertexes)>;
     static_assert(std::is_same_v<decltype(SFML_Quad::vertexes), eastl::array<sf::Vertex, quad_vert_count>>);
     // Checking that SFML_Quad has only a member with an array of vertices
     static_assert(sizeof(SFML_Quad) == sizeof(eastl::array<sf::Vertex, quad_vert_count>));
