@@ -71,3 +71,9 @@ if (BUILD_TESTING)
   )
   list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
 endif ()
+
+CPMAddPackage(
+  NAME loose_quadtree
+  URL "https://github.com/alexv-ds/loose_quadtree/archive/refs/tags/v2.0.0.tar.gz"
+  URL_HASH "SHA3_256=223b2cf9ceaf4177adc52a5a27180168b8a5f8a0c3012b7c555ae19a2306f2c8"
+)
